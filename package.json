@@ -10,6 +10,7 @@
     "dev": "npm run start",
     "install:all": "npm run install:backend && npm run install:frontend && npm run install:dashboard",
     "install:backend": "cd backend && npm install",
+    "build:backend": "cd backend && npm ci --only=production",
     "install:frontend": "cd frontend && npm install",
     "install:dashboard": "cd dashboard-web && npm install",
     "start:backend": "cd backend && npm start",

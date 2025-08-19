@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm start)",
+      "Bash(npm run dev:*)",
+      "Bash(npx expo:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(rmdir:*)",
+      "Bash(npm test)",
+      "Bash(npx jest:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run test:geolocation:*)",
+      "Bash(npm run test:security:*)",
+      "Bash(pm2 status:*)",
+      "Bash(pm2 delete:*)",
+      "Bash(pm2 start:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm update)",
+      "Bash(npm view:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
