@@ -27,12 +27,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Rate limiting
+// Rate limiting (reducido para desarrollo)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // máximo 100 requests por ventana de tiempo
+  windowMs: 2 * 60 * 1000, // 2 minutos
+  max: 200, // máximo 200 requests por ventana de tiempo
   message: {
-    error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo en 15 minutos.'
+    error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo en 2 minutos.'
   }
 });
 app.use(limiter);

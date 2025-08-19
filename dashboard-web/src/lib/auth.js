@@ -70,12 +70,12 @@ class AuthService {
     try {
       const response = await apiClient.get('/auth/profile');
       
-      if (response.perfil) {
-        this.saveUserData(response.perfil);
-        this.currentUser = response.perfil;
+      if (response.user) {
+        this.saveUserData(response.user);
+        this.currentUser = response.user;
       }
 
-      return response.perfil;
+      return response.user;
     } catch (error) {
       console.error('Error al obtener perfil:', error);
       throw error;

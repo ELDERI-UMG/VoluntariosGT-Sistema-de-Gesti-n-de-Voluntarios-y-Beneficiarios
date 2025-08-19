@@ -1,415 +1,196 @@
-import { supabase, supabaseAdmin } from '../config.js';
-import { validateEmail, validatePassword, validateDPI, sanitizeText } from '../utils/validation.js';
 
-/**
- * Registra un nuevo usuario en el sistema
- */
-export const register = async (req, res) => {
+import { supabase } from '../config.js';
+
+const login = async (req, res) => {
   try {
-    const {
+    const { email, password } = req.body;
+    
+    // Autenticar con Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    const user = data.user;
+    const session = data.session;
+
+    // Respuesta exitosa (compatible con dashboard)
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        nombre_completo: user.user_metadata?.nombre_completo || user.email.split('@')[0],
+        rol: user.user_metadata?.role || 'voluntario',
+        verificado: user.user_metadata?.verificado || true
+      },
+      session: {
+        access_token: session.access_token,
+        refresh_token: session.refresh_token
+      },
+      // También incluir formato legacy para compatibilidad
+      token: session.access_token,
+      refreshToken: session.refresh_token
+    });
+
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+const register = async (req, res) => {
+  try {
+    const { email, password, nombre_completo, rol } = req.body;
+    
+    const { data, error } = await supabase.auth.admin.createUser({
       email,
       password,
-      nombre_completo,
-      telefono,
-      dpi,
-      rol,
-      ubicacion,
-      direccion,
-      fecha_nacimiento,
-      genero,
-      habilidades,
-      disponibilidad
-    } = req.body;
-
-    // Validaciones básicas
-    if (!email || !validateEmail(email)) {
-      return res.status(400).json({
-        error: 'Email inválido'
-      });
-    }
-
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      return res.status(400).json({
-        error: 'Contraseña inválida',
-        details: passwordValidation.errors
-      });
-    }
-
-    if (!nombre_completo || nombre_completo.trim().length < 2) {
-      return res.status(400).json({
-        error: 'El nombre completo es requerido'
-      });
-    }
-
-    if (!['beneficiario', 'voluntario', 'entidad'].includes(rol)) {
-      return res.status(400).json({
-        error: 'Rol inválido. Debe ser: beneficiario, voluntario o entidad'
-      });
-    }
-
-    // Validar DPI si se proporciona
-    if (dpi && !validateDPI(dpi)) {
-      return res.status(400).json({
-        error: 'Número de DPI inválido'
-      });
-    }
-
-    // Registrar usuario en Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          nombre_completo: sanitizeText(nombre_completo),
-          rol
-        }
+      email_confirm: true,
+      user_metadata: {
+        nombre_completo,
+        role: rol || 'voluntario',
+        verificado: true
       }
     });
 
-    if (authError) {
-      console.error('Error en registro de Supabase Auth:', authError);
-      return res.status(400).json({
-        error: authError.message
-      });
-    }
-
-    if (!authData.user) {
-      return res.status(400).json({
-        error: 'No se pudo crear el usuario'
-      });
-    }
-
-    // Crear perfil del usuario
-    const perfilData = {
-      id: authData.user.id,
-      email,
-      nombre_completo: sanitizeText(nombre_completo),
-      telefono: telefono ? sanitizeText(telefono) : null,
-      dpi: dpi || null,
-      rol,
-      ubicacion: ubicacion ? `POINT(${ubicacion.lon} ${ubicacion.lat})` : null,
-      direccion: direccion ? sanitizeText(direccion) : null,
-      fecha_nacimiento: fecha_nacimiento || null,
-      genero: genero ? sanitizeText(genero) : null,
-      habilidades: habilidades || [],
-      disponibilidad: disponibilidad || null
-    };
-
-    const { data: perfilCreado, error: perfilError } = await supabaseAdmin
-      .from('perfiles')
-      .insert(perfilData)
-      .select()
-      .single();
-
-    if (perfilError) {
-      console.error('Error al crear perfil:', perfilError);
-      
-      // Limpiar usuario de Auth si falló la creación del perfil
-      await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
-      
-      return res.status(500).json({
-        error: 'Error al crear el perfil del usuario'
-      });
+    if (error) {
+      return res.status(400).json({ error: error.message });
     }
 
     res.status(201).json({
-      message: 'Usuario registrado exitosamente',
+      message: 'Usuario creado exitosamente',
       user: {
-        id: authData.user.id,
-        email: authData.user.email,
-        nombre_completo: perfilCreado.nombre_completo,
-        rol: perfilCreado.rol,
-        verificado: perfilCreado.verificado
+        id: data.user.id,
+        email: data.user.email,
+        nombre_completo,
+        rol: rol || 'voluntario'
       }
     });
 
   } catch (error) {
     console.error('Error en registro:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-/**
- * Inicia sesión de usuario
- */
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Validaciones básicas
-    if (!email || !validateEmail(email)) {
-      return res.status(400).json({
-        error: 'Email inválido'
-      });
-    }
-
-    if (!password) {
-      return res.status(400).json({
-        error: 'Contraseña requerida'
-      });
-    }
-
-    // Autenticar con Supabase
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (authError) {
-      console.error('Error en login:', authError);
-      return res.status(401).json({
-        error: 'Credenciales inválidas'
-      });
-    }
-
-    // Obtener perfil del usuario
-    const { data: perfil, error: perfilError } = await supabase
-      .from('perfiles')
-      .select('*')
-      .eq('id', authData.user.id)
-      .single();
-
-    if (perfilError || !perfil) {
-      console.error('Error al obtener perfil:', perfilError);
-      return res.status(404).json({
-        error: 'Perfil de usuario no encontrado'
-      });
-    }
-
-    res.json({
-      message: 'Login exitoso',
-      user: {
-        id: authData.user.id,
-        email: authData.user.email,
-        nombre_completo: perfil.nombre_completo,
-        rol: perfil.rol,
-        verificado: perfil.verificado,
-        puntos_reputacion: perfil.puntos_reputacion
-      },
-      session: {
-        access_token: authData.session.access_token,
-        refresh_token: authData.session.refresh_token,
-        expires_at: authData.session.expires_at
-      }
-    });
-
-  } catch (error) {
-    console.error('Error en login:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
-  }
-};
-
-/**
- * Refresca el token de acceso
- */
-export const refreshToken = async (req, res) => {
+const refreshToken = async (req, res) => {
   try {
     const { refresh_token } = req.body;
-
-    if (!refresh_token) {
-      return res.status(400).json({
-        error: 'Refresh token requerido'
-      });
-    }
-
+    
     const { data, error } = await supabase.auth.refreshSession({
       refresh_token
     });
 
     if (error) {
-      console.error('Error al refrescar token:', error);
-      return res.status(401).json({
-        error: 'Token inválido'
-      });
+      return res.status(401).json({ error: 'Token inválido' });
     }
 
     res.json({
-      session: {
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token,
-        expires_at: data.session.expires_at
-      }
+      token: data.session.access_token,
+      refreshToken: data.session.refresh_token
     });
 
   } catch (error) {
-    console.error('Error al refrescar token:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
+    console.error('Error refrescando token:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-/**
- * Cierra sesión del usuario
- */
-export const logout = async (req, res) => {
+const logout = async (req, res) => {
+  try {
+    res.json({ message: 'Sesión cerrada exitosamente' });
+  } catch (error) {
+    console.error('Error en logout:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+const getProfile = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        error: 'Token de acceso requerido'
-      });
+      return res.status(401).json({ error: 'Token de acceso requerido' });
     }
 
     const token = authHeader.substring(7);
 
-    // Cerrar sesión en Supabase
-    const { error } = await supabase.auth.admin.signOut(token);
+    // Verificar token con Supabase directamente
+    const { data: { user }, error } = await supabase.auth.getUser(token);
 
-    if (error) {
-      console.error('Error al cerrar sesión:', error);
-      return res.status(400).json({
-        error: 'Error al cerrar sesión'
-      });
+    if (error || !user) {
+      return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 
+    // Devolver información del usuario desde Auth
     res.json({
-      message: 'Sesión cerrada exitosamente'
+      user: {
+        id: user.id,
+        email: user.email,
+        nombre_completo: user.user_metadata?.nombre_completo || user.email.split('@')[0],
+        rol: user.user_metadata?.role || 'voluntario',
+        verificado: user.user_metadata?.verificado || true,
+        telefono: user.user_metadata?.telefono,
+        created_at: user.created_at
+      }
     });
 
   } catch (error) {
-    console.error('Error al cerrar sesión:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
+    console.error('Error obteniendo perfil:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-/**
- * Obtiene el perfil del usuario actual
- */
-export const getProfile = async (req, res) => {
+const updateProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
-
+    const { nombre_completo, telefono } = req.body;
+    
     if (!userId) {
-      return res.status(401).json({
-        error: 'Usuario no autenticado'
-      });
+      return res.status(401).json({ error: 'No autorizado' });
     }
 
-    const { data: perfil, error } = await supabase
-      .from('perfiles')
-      .select(`
-        *,
-        entidades (
-          id,
-          nombre_organizacion,
-          tipo_organizacion,
-          verificado
-        )
-      `)
-      .eq('id', userId)
-      .single();
-
-    if (error || !perfil) {
-      console.error('Error al obtener perfil:', error);
-      return res.status(404).json({
-        error: 'Perfil no encontrado'
-      });
-    }
-
-    res.json({
-      perfil
+    // Actualizar metadata del usuario
+    const { data, error } = await supabase.auth.admin.updateUserById(userId, {
+      user_metadata: {
+        nombre_completo,
+        telefono,
+        // Mantener otros campos existentes
+        role: req.user.user_metadata?.role || 'voluntario',
+        verificado: req.user.user_metadata?.verificado || true
+      }
     });
-
-  } catch (error) {
-    console.error('Error al obtener perfil:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
-  }
-};
-
-/**
- * Actualiza el perfil del usuario
- */
-export const updateProfile = async (req, res) => {
-  try {
-    const userId = req.user?.id;
-    const {
-      nombre_completo,
-      telefono,
-      direccion,
-      fecha_nacimiento,
-      genero,
-      habilidades,
-      disponibilidad,
-      ubicacion
-    } = req.body;
-
-    if (!userId) {
-      return res.status(401).json({
-        error: 'Usuario no autenticado'
-      });
-    }
-
-    const updateData = {};
-
-    if (nombre_completo) {
-      updateData.nombre_completo = sanitizeText(nombre_completo);
-    }
-    if (telefono) {
-      updateData.telefono = sanitizeText(telefono);
-    }
-    if (direccion) {
-      updateData.direccion = sanitizeText(direccion);
-    }
-    if (fecha_nacimiento) {
-      updateData.fecha_nacimiento = fecha_nacimiento;
-    }
-    if (genero) {
-      updateData.genero = sanitizeText(genero);
-    }
-    if (habilidades) {
-      updateData.habilidades = habilidades;
-    }
-    if (disponibilidad) {
-      updateData.disponibilidad = disponibilidad;
-    }
-    if (ubicacion) {
-      updateData.ubicacion = `POINT(${ubicacion.lon} ${ubicacion.lat})`;
-    }
-
-    const { data: perfilActualizado, error } = await supabase
-      .from('perfiles')
-      .update(updateData)
-      .eq('id', userId)
-      .select()
-      .single();
 
     if (error) {
-      console.error('Error al actualizar perfil:', error);
-      return res.status(400).json({
-        error: 'Error al actualizar perfil'
-      });
+      return res.status(400).json({ error: error.message });
     }
 
     res.json({
       message: 'Perfil actualizado exitosamente',
-      perfil: perfilActualizado
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        nombre_completo,
+        telefono,
+        rol: data.user.user_metadata?.role || 'voluntario'
+      }
     });
 
   } catch (error) {
-    console.error('Error al actualizar perfil:', error);
-    res.status(500).json({
-      error: 'Error interno del servidor'
-    });
+    console.error('Error actualizando perfil:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-export default {
-  register,
+export {
   login,
+  register,
   refreshToken,
   logout,
   getProfile,
   updateProfile
 };
-

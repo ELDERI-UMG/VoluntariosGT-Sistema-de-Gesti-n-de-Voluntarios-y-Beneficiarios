@@ -183,3 +183,22 @@ NOTES.md
 test-data/
 mock-data/
 
+# Scripts de desarrollo/debug personal (no incluir en repositorio)
+activate-user.js
+clear-auth-and-test.js
+create-minimal-db.js
+create-tables.js
+debug-login.js
+fix-user-roles.js
+populate-database.js
+reset-rate-limit.js
+setup-complete.js
+setup-database.js
+test-database.js
+update-users-with-uids.js
+
+# Archivos de configuración personal/local
+.mcp.json
+mcp-config.json
+package-lock.json
+

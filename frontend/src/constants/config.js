@@ -11,8 +11,8 @@ export const APP_CONFIG = {
     : 'https://tu-backend-produccion.com/api', // Producción
   
   // Configuración de Supabase
-  SUPABASE_URL: 'https://tuproyecto.supabase.co',
-  SUPABASE_ANON_KEY: 'tu_anon_key_aqui',
+  SUPABASE_URL: 'https://cicwxpdkikzeboeggmje.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpY3d4cGRraWt6ZWJvZWdnbWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NzU1ODksImV4cCI6MjA3MTE1MTU4OX0.wovhHu2oOato__PovFmVWkCa9ujFZOT8BJRx9VauYFo',
   
   // Configuración de mapas
   MAPS: {

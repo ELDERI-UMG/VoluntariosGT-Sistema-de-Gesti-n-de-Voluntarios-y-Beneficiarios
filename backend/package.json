@@ -2,6 +2,7 @@
   "name": "voluntarios-backend",
   "version": "1.0.0",
   "description": "Backend para la aplicación de gestión de voluntarios y beneficiarios",
+  "type": "module",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
