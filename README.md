@@ -226,7 +226,7 @@ npm run test:security     # Auditoría de seguridad + tests
 ```env
 # URLs del Backend
 EXPO_PUBLIC_API_BASE_URL_DEV=http://localhost:5000/api
-EXPO_PUBLIC_API_BASE_URL_PROD=https://tu-backend-produccion.com/api
+EXPO_PUBLIC_API_BASE_URL_PROD=https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/api
 
 # Configuración de Supabase
 EXPO_PUBLIC_SUPABASE_URL=tu_url_de_supabase
@@ -254,7 +254,11 @@ npx expo start
 
 1. **Variables de entorno (`dashboard-web/.env`):**
 ```env
+# Para desarrollo
 VITE_API_BASE_URL=http://localhost:5000/api
+
+# Para producción
+VITE_API_BASE_URL=https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/api
 ```
 
 2. **Ejecutar dashboard:**
@@ -379,9 +383,15 @@ ON beneficiarios FOR SELECT USING (auth.uid() = id);
 
 ### Backend
 ```bash
-# Usando Render o Railway
+# Desplegado en Render
+# URL: https://voluntariosgt-sistema-de-gesti-n-de.onrender.com
+
+# Para redesplegar:
 git push origin main
 # El servicio se despliega automáticamente
+
+# Health check disponible en:
+# https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/health
 ```
 
 ### Dashboard Web

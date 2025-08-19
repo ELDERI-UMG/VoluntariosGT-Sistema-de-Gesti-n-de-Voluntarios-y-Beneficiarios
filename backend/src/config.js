@@ -49,6 +49,15 @@ export const config = {
   files: {
     maxSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880, // 5MB
     allowedTypes: process.env.ALLOWED_FILE_TYPES?.split(',') || ['image/jpeg', 'image/png', 'application/pdf']
+  },
+  cors: {
+    allowedOrigins: process.env.CORS_ALLOWED_ORIGINS?.split(',') || [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://localhost:8081',
+      'https://voluntarios-gt-sistema-de-gesti-n-d.vercel.app',
+      'https://*.vercel.app'
+    ]
   }
 };
 

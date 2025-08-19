@@ -19,7 +19,9 @@
       "Bash(pm2 start:*)",
       "Bash(npm ls:*)",
       "Bash(npm update)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Bash(curl:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
