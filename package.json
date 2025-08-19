@@ -1,0 +1,108 @@
+{
+  "name": "voluntarios-gt",
+  "version": "1.0.0",
+  "description": "Sistema integral de gestión de voluntarios y beneficiarios para Guatemala",
+  "main": "index.js",
+  "scripts": {
+    "setup": "./setup.sh",
+    "start": "./start.sh",
+    "stop": "./stop.sh",
+    "dev": "npm run start",
+    "install:all": "npm run install:backend && npm run install:frontend && npm run install:dashboard",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:dashboard": "cd dashboard-web && npm install",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npx expo start",
+    "start:dashboard": "cd dashboard-web && npm run dev",
+    "build:frontend": "cd frontend && eas build --platform android",
+    "build:dashboard": "cd dashboard-web && npm run build",
+    "test": "echo \"Tests not implemented yet\" && exit 0",
+    "lint": "echo \"Linting not configured yet\" && exit 0",
+    "clean": "rm -rf */node_modules && rm -rf logs/*.log",
+    "docs": "echo \"Opening documentation...\" && open docs/manual-usuario.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tu-usuario/voluntarios-app.git"
+  },
+  "keywords": [
+    "voluntariado",
+    "guatemala",
+    "react-native",
+    "nodejs",
+    "supabase",
+    "social-impact",
+    "mobile-app",
+    "volunteer-management",
+    "beneficiarios",
+    "geolocation",
+    "certificates",
+    "nonprofit"
+  ],
+  "author": {
+    "name": "Elder Ramiro Ixcopal Arroyo",
+    "email": "elder@voluntariosgt.org",
+    "url": "https://github.com/tu-usuario"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tu-usuario/voluntarios-app/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/voluntarios-app#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "dashboard-web"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "config": {
+    "backend_port": 5000,
+    "dashboard_port": 5173,
+    "expo_port": 8081
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/tu-usuario"
+  },
+  "contributors": [
+    {
+      "name": "Elder Ramiro Ixcopal Arroyo",
+      "email": "elder@voluntariosgt.org",
+      "role": "Lead Developer"
+    }
+  ],
+  "directories": {
+    "doc": "docs",
+    "lib": "backend/src",
+    "test": "__tests__"
+  },
+  "files": [
+    "backend/",
+    "frontend/",
+    "dashboard-web/",
+    "supabase/",
+    "docs/",
+    "setup.sh",
+    "start.sh",
+    "stop.sh",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "volta": {
+    "node": "18.17.0",
+    "npm": "9.6.7"
+  }
+}
+
