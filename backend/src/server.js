@@ -22,6 +22,9 @@ app.use(helmet({
 // Configuración de CORS
 const allowedOrigins = config.cors.allowedOrigins;
 
+// Log de dominios permitidos para debug
+console.log('🌐 CORS - Dominios permitidos:', allowedOrigins);
+
 app.use(cors({
   origin: function (origin, callback) {
     // Permitir requests sin origin (mobile apps, Postman, etc.)
@@ -38,10 +41,18 @@ app.use(cors({
     });
     
     if (isAllowed) {
+      console.log('✅ CORS permitido para:', origin);
       callback(null, true);
     } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('No permitido por la política CORS'));
+      console.log('❌ CORS bloqueado para:', origin);
+      console.log('Dominios permitidos:', allowedOrigins);
+      // En desarrollo, permitir todos los origins para testing
+      if (config.nodeEnv === 'development') {
+        console.log('⚠️ Modo desarrollo: permitiendo origin bloqueado');
+        callback(null, true);
+      } else {
+        callback(new Error('No permitido por la política CORS'));
+      }
     }
   },
   credentials: true,

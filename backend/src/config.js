@@ -51,13 +51,33 @@ export const config = {
     allowedTypes: process.env.ALLOWED_FILE_TYPES?.split(',') || ['image/jpeg', 'image/png', 'application/pdf']
   },
   cors: {
-    allowedOrigins: process.env.CORS_ALLOWED_ORIGINS?.split(',') || [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://localhost:8081',
-      'https://voluntarios-gt-sistema-de-gesti-n-d.vercel.app',
-      'https://*.vercel.app'
-    ]
+    allowedOrigins: (() => {
+      // Si existe FRONTEND_URL, usarlo como origen principal
+      const frontendUrl = process.env.FRONTEND_URL;
+      const corsOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',').map(origin => origin.trim());
+      
+      // Origins base para desarrollo
+      const baseOrigins = [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:8081'
+      ];
+      
+      // Si hay FRONTEND_URL específica, agregarla
+      if (frontendUrl) {
+        baseOrigins.push(frontendUrl);
+      }
+      
+      // Agregar patrones de Vercel
+      baseOrigins.push('https://*.vercel.app');
+      
+      // Si hay CORS_ALLOWED_ORIGINS, combinarlos
+      if (corsOrigins && corsOrigins.length > 0) {
+        return [...new Set([...baseOrigins, ...corsOrigins])];
+      }
+      
+      return baseOrigins;
+    })()
   }
 };
 

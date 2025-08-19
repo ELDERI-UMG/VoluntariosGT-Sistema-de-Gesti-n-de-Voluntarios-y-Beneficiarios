@@ -396,7 +396,10 @@ git push origin main
 
 ### Dashboard Web
 ```bash
-# Usando Vercel
+# Desplegado en Vercel
+# URL: https://voluntarios-gt-sistema-de-gesti-n-d.vercel.app
+
+# Para redesplegar:
 npm run build
 vercel --prod
 ```
@@ -409,6 +412,22 @@ npm run build:frontend
 # O usar expo build (legacy)
 expo build:android
 ```
+
+---
+
+## 🌐 URLs de Producción
+
+### Servicios Desplegados
+- **🗄️ Backend API:** https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/api
+- **💻 Dashboard Web:** https://voluntarios-gt-sistema-de-gesti-n-d.vercel.app
+- **📱 App Móvil:** Disponible via APK (build manual)
+- **🩺 Health Check:** https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/health
+
+### Configuración CORS
+El backend está configurado para permitir requests desde:
+- `https://voluntarios-gt-sistema-de-gesti-n-d.vercel.app`
+- `https://*.vercel.app` (subdominios de Vercel)
+- `http://localhost:*` (desarrollo local)
 
 ---
 

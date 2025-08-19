@@ -21,7 +21,9 @@
       "Bash(npm update)",
       "Bash(npm view:*)",
       "Bash(curl:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(pm2 stop:*)"
     ],
     "deny": [],
     "ask": []
