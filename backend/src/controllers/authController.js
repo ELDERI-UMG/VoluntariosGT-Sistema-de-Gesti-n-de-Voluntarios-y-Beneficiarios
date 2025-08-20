@@ -1,5 +1,5 @@
 
-import { supabase } from '../config.js';
+import { supabase, supabaseAdmin } from '../config.js';
 
 const login = async (req, res) => {
   try {
@@ -46,7 +46,7 @@ const register = async (req, res) => {
   try {
     const { email, password, nombre_completo, rol } = req.body;
     
-    const { data, error } = await supabase.auth.admin.createUser({
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
