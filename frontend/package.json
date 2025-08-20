@@ -4,12 +4,15 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~5.0.4",
     "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-firebase/app": "^23.1.0",
+    "@react-native-firebase/messaging": "^23.1.0",
     "@react-native-picker/picker": "^2.11.1",
     "@react-navigation/bottom-tabs": "^7.4.6",
     "@react-navigation/native": "^7.1.17",
@@ -22,17 +25,30 @@
     "expo-notifications": "^0.31.4",
     "expo-status-bar": "~2.2.3",
     "nativewind": "^4.1.23",
+    "onesignal-expo-plugin": "^2.0.3",
     "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-maps": "1.20.1",
+    "react-native-onesignal": "^5.2.13",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
+    "react-native-web": "^0.20.0",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
+  },
+  "overrides": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "@types/react": "^19.0.0"
+  },
+  "resolutions": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "private": true
 }

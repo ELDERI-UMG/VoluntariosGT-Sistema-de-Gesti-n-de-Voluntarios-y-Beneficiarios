@@ -1,13 +1,12 @@
-# VoluntariosGT - Archivos a ignorar en Git
+# =============================================================================
+# GITIGNORE - VOLUNTARIOS GT
+# Sistema de Gestión de Voluntarios y Beneficiarios para Guatemala
+# =============================================================================
 
-# Dependencias
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Archivos de entorno
+# =============================================================================
+# ARCHIVOS DE CONFIGURACIÓN SENSIBLE (NUNCA COMMITEAR)
+# =============================================================================
+# Variables de entorno con claves secretas
 .env
 .env.local
 .env.development.local
@@ -15,106 +14,253 @@ pnpm-debug.log*
 .env.production.local
 .env.production
 
-# Logs
-logs/
-*.log
-*.log.*
-
-# Archivos temporales
-temp/
-tmp/
-.tmp/
-
-# Archivos de sistema
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDEs y editores
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Archivos de build
-dist/
-build/
-out/
-
-# Cache
-.cache/
-.parcel-cache/
-.next/
-.nuxt/
-
-# Expo
-.expo/
-.expo-shared/
-expo-env.d.ts
-
-# React Native
-.react-native/
-
-# Archivos de certificados y claves (NUNCA commitear)
+# Archivos de claves y certificados
 *.pem
 *.key
 *.crt
 *.p12
 *.keystore
+firebase-service-account.json
+service-account-key.json
 
-# Uploads y archivos de usuario
+# Configuraciones locales específicas (removidas configuraciones de Claude no necesarias en producción)
+
+# =============================================================================
+# DEPENDENCIAS Y MÓDULOS
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# =============================================================================
+# ARCHIVOS DE BUILD Y DISTRIBUCIÓN
+# =============================================================================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.expo/
+.expo-shared/
+
+# Android builds
+android/app/build/
+android/build/
+*.apk
+*.aab
+
+# iOS builds
+ios/build/
+*.ipa
+
+# =============================================================================
+# ARCHIVOS TEMPORALES Y CACHE
+# =============================================================================
+temp/
+tmp/
+.tmp/
+.cache/
+.parcel-cache/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Logs
+logs/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =============================================================================
+# ARCHIVOS DEL SISTEMA OPERATIVO
+# =============================================================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+
+# =============================================================================
+# EDITORES E IDEs
+# =============================================================================
+# VSCode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# =============================================================================
+# ARCHIVOS DE DESARROLLO Y TESTING
+# =============================================================================
+# Coverage reports
+coverage/
+.nyc_output/
+.lcov
+
+# Test databases
+*.test.db
+*.test.sqlite
+*.test.sqlite3
+
+# Mock data
+test-data/
+mock-data/
+fixtures/
+
+# =============================================================================
+# ARCHIVOS DE USUARIO Y UPLOADS
+# =============================================================================
 uploads/
 user-uploads/
+static/uploads/
+
+# Archivos multimedia (excepto assets del proyecto)
 *.pdf
 *.jpg
 *.jpeg
 *.png
 *.gif
+*.webp
 *.svg
-!docs/**/*.png
-!docs/**/*.jpg
-!docs/**/*.svg
+*.mp4
+*.avi
+*.mov
 
-# Base de datos local
+# Excepciones para assets del proyecto
+!assets/**/*
+!src/assets/**/*
+!public/**/*
+!docs/**/*
+!frontend/assets/**/*
+!dashboard-web/public/**/*
+
+# =============================================================================
+# BASE DE DATOS Y RESPALDOS
+# =============================================================================
+# Bases de datos locales
 *.db
 *.sqlite
 *.sqlite3
 
-# Backups
+# Respaldos
 *.backup
 *.bak
 *.old
+*.dump
 
-# Archivos de configuración específicos del entorno
-config/local.js
-config/production.js
+# =============================================================================
+# ARCHIVOS ESPECÍFICOS DEL PROYECTO
+# =============================================================================
+# Archivos de configuración de Supabase locales
+supabase/.branches
+supabase/.temp
 
+# Scripts de desarrollo/debug personal
+activate-user.js
+clear-auth-and-test.js
+create-minimal-db.js
+create-tables.js
+debug-login.js
+fix-user-roles.js
+populate-database.js
+reset-rate-limit.js
+setup-complete.js
+setup-database.js
+test-database.js
+update-users-with-uids.js
+test-notification.js
+register-test-user.js
+
+# Notas de desarrollo personal
+dev-notes.md
+TODO.md
+NOTES.md
+DEVELOPMENT.md
+
+# =============================================================================
+# REACT NATIVE Y EXPO ESPECÍFICOS
+# =============================================================================
+# Expo
+.expo/
+.expo-shared/
+expo-env.d.ts
+web-build/
+
+# React Native
+.react-native/
+metro.config.js.bak
+
+# Android específico
+android/app/debug.keystore
+android/app/release.keystore
+android/local.properties
+android/gradlew
+android/gradlew.bat
+android/gradle/wrapper/gradle-wrapper.jar
+
+# iOS específico
+ios/Pods/
+ios/*.xcworkspace
+ios/*.xcodeproj
+ios/build/
+
+# =============================================================================
+# OTROS ARCHIVOS TEMPORALES
+# =============================================================================
 # PIDs
 *.pid
+*.seed
+*.pid.lock
 
-# Coverage reports
-coverage/
-.nyc_output/
-
-# Dependency directories
-jspm_packages/
+# Runtime data
+pids/
+logs/
 
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -128,77 +274,42 @@ jspm_packages/
 # dotenv environment variables file
 .env.test
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
+# =============================================================================
+# ARCHIVOS QUE SÍ DEBEN INCLUIRSE EN GIT
+# =============================================================================
+# Estos archivos SON importantes para producción:
+# 
+# ✅ INCLUIR:
+# - .env.example (template sin datos sensibles)
+# - package.json (dependencias del proyecto)
+# - docker-compose.yml (configuración de contenedores)
+# - Dockerfile (configuración de imagen)
+# - app.json (configuración de Expo)
+# - google-services.json (configuración de Firebase - SIN claves privadas)
+# - CLAUDE.md (instrucciones del proyecto)
+# - README.md (documentación)
+# - supabase/migrations/ (migraciones de base de datos)
+# - src/ (código fuente)
+# - public/ (archivos públicos)
+# - assets/ (recursos del proyecto)
+# 
+# ❌ NUNCA INCLUIR:
+# - .env (variables reales)
+# - firebase-service-account.json (claves privadas)
+# - *.keystore (certificados)
+# - node_modules/ (dependencias descargables)
+# - build/ (archivos generados)
+# - uploads/ (archivos de usuario)
+# =============================================================================
 
-# Next.js build output
-.next
+# Excluir archivos compilados de Java
+*.class
 
-# Nuxt.js build / generate output
-.nuxt
-dist
+# Excluir archivos específicos que se generan automáticamente
+com.facebook.react.devsupport.BundleDownloader*
+java.util.concurrent.ThreadPoolExecutor
+nul
 
-# Gatsby files
-.cache/
-public
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
-tmp/
-temp/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Archivos específicos del proyecto
-supabase/.branches
-supabase/.temp
-
-# Archivos de desarrollo local
-dev-notes.md
-TODO.md
-NOTES.md
-
-# Archivos de prueba
-test-data/
-mock-data/
-
-# Scripts de desarrollo/debug personal (no incluir en repositorio)
-activate-user.js
-clear-auth-and-test.js
-create-minimal-db.js
-create-tables.js
-debug-login.js
-fix-user-roles.js
-populate-database.js
-reset-rate-limit.js
-setup-complete.js
-setup-database.js
-test-database.js
-update-users-with-uids.js
-
-# Archivos de configuración personal/local
-.mcp.json
-mcp-config.json
-package-lock.json
-
+# =============================================================================
+# FIN DEL GITIGNORE
+# =============================================================================

@@ -11,6 +11,7 @@ import usuariosRoutes from './routes/usuarios.js';
 import certificadosRoutes from './routes/certificados.js';
 import notificacionesRoutes from './routes/notificaciones.js';
 import reportesRoutes from './routes/reportes.js';
+import oneSignalRoutes from './routes/oneSignalRoutes.js';
 
 const app = express();
 
@@ -87,6 +88,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/certificados', certificadosRoutes);
 app.use('/api/notificaciones', notificacionesRoutes);
 app.use('/api/reportes', reportesRoutes);
+app.use('/api/onesignal', oneSignalRoutes);
 
 // Ruta de salud del servidor
 app.get('/health', (req, res) => {

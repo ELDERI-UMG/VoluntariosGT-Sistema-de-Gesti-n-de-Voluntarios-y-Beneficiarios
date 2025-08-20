@@ -23,7 +23,15 @@
       "Bash(curl:*)",
       "Bash(git add:*)",
       "Bash(git push:*)",
-      "Bash(pm2 stop:*)"
+      "Bash(pm2 stop:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm run:*)",
+      "Bash(copy:*)"
     ],
     "deny": [],
     "ask": []

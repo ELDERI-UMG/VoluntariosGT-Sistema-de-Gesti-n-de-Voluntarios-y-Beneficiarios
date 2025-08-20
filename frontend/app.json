@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -33,6 +33,14 @@
         "projectId": "80665ff4-11b2-428b-95b5-f70626a56a1c"
       }
     },
+    "plugins": [
+      [
+        "onesignal-expo-plugin",
+        {
+          "mode": "development"
+        }
+      ]
+    ],
     "owner": "elder_ixcopal"
   }
 }

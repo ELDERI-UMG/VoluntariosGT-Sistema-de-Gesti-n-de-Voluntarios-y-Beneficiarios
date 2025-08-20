@@ -1,6 +1,7 @@
 import { supabase, supabaseAdmin } from '../config.js';
 import { validateActividad, sanitizeText } from '../utils/validation.js';
 import { findNearbyActivities } from '../utils/geolocation.js';
+import { notifyNewActivity } from '../services/oneSignalService.js';
 
 /**
  * Obtiene todas las actividades disponibles
@@ -223,6 +224,20 @@ export const createActividad = async (req, res) => {
       return res.status(500).json({
         error: 'Error al crear la actividad'
       });
+    }
+
+    // Enviar notificación de nueva actividad
+    try {
+      await notifyNewActivity({
+        id: actividadCreada.id,
+        titulo: actividadCreada.titulo,
+        entidad_nombre: actividadCreada.entidades.nombre_organizacion,
+        ubicacion_lat: actividadCreada.ubicacion_lat,
+        ubicacion_lng: actividadCreada.ubicacion_lng
+      });
+    } catch (notificationError) {
+      console.error('Error enviando notificación:', notificationError);
+      // No fallar la creación por error de notificación
     }
 
     res.status(201).json({

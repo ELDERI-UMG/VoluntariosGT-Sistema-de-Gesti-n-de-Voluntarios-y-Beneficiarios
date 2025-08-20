@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "867335203013",
+    "project_id": "voluntarios-gt",
+    "storage_bucket": "voluntarios-gt.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867335203013:android:efb01db5b46105d6dc68ac",
+        "android_client_info": {
+          "package_name": "com.voluntariosgt.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ3lb7w1zhQi6Uot7QuF2xOwqgir5OjjI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

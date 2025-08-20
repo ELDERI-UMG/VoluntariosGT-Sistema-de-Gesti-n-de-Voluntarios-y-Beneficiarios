@@ -79,6 +79,11 @@ export const APP_CONFIG = {
     MAX_NOTIFICATIONS_PER_PAGE: parseNumber(process.env.EXPO_PUBLIC_MAX_NOTIFICATIONS_PER_PAGE, 20),
   },
   
+  // Configuración de OneSignal
+  ONESIGNAL: {
+    APP_ID: '4e454899-0398-41a0-b99c-4fc7a00f896e',
+  },
+  
   // Configuración de cache (estas no van en .env por seguridad)
   CACHE: {
     TOKEN_KEY: 'auth_token',
