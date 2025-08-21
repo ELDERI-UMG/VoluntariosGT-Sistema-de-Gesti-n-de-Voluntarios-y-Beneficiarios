@@ -140,27 +140,86 @@ export class DataService {
     }
   }
 
-  // Generar certificado
-  static async generateCertificate(volunteerId, activityId) {
+  // Obtener datos de certificados
+  static async getCertificatesData() {
+    try {
+      console.log('🔄 Cargando datos de certificados...');
+      
+      const response = await Promise.race([
+        apiClient.get('/certificados/estadisticas'),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 3000)
+        )
+      ]);
+      
+      console.log('✅ Datos de certificados cargados');
+      return response;
+      
+    } catch (error) {
+      console.warn('⚠️ Certificates API falló, usando datos simulados');
+      return await MockDataService.getCertificatesData();
+    }
+  }
+
+  // Generar certificado individual
+  static async generateCertificate(data) {
     try {
       console.log('🔄 Generando certificado...');
       
-      const response = await apiClient.post('/certificados/generar', {
-        voluntario_id: volunteerId,
-        actividad_id: activityId
-      });
+      const response = await apiClient.post('/certificados/generar', data);
       
       console.log('✅ Certificado generado');
       return response;
       
     } catch (error) {
-      console.warn('⚠️ Certificate API falló, simulando generación');
+      console.warn('⚠️ Certificate API falló, generando certificado local');
+      return await MockDataService.generateCertificate(data);
+    }
+  }
+
+  // Buscar certificados
+  static async searchCertificates(query = '', filters = {}) {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        ...filters
+      }).toString();
       
-      await MockDataService.delay(1000);
+      const response = await Promise.race([
+        apiClient.get(`/certificados/buscar?${params}`),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 2000)
+        )
+      ]);
+      
+      return response;
+      
+    } catch (error) {
+      console.warn('⚠️ Search API falló, usando búsqueda local');
+      return await MockDataService.searchCertificates(query, filters);
+    }
+  }
+
+  // Generar lote de certificados
+  static async generateBatchCertificates(activityId) {
+    try {
+      console.log('🔄 Generando lote de certificados...');
+      
+      const response = await apiClient.post('/certificados/generar-lote', {
+        actividad_id: activityId
+      });
+      
+      console.log('✅ Lote de certificados generado');
+      return response;
+      
+    } catch (error) {
+      console.warn('⚠️ Batch API falló, simulando generación');
+      
+      await MockDataService.delay(2000);
       return {
         success: true,
-        message: 'Certificado generado (modo demo)',
-        certificate_url: '/demo-certificate.pdf'
+        message: 'Lote de 15 certificados generado exitosamente (modo demo)',
+        certificates_generated: 15
       };
     }
   }
