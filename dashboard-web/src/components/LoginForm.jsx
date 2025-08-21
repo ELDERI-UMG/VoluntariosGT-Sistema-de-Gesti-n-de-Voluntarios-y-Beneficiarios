@@ -66,9 +66,12 @@ export const LoginForm = () => {
     }
 
     try {
-      await login(formData.email, formData.password);
+      console.log('🔄 Iniciando login...');
+      const result = await login(formData.email, formData.password);
+      console.log('✅ Login exitoso:', result);
+      console.log('🔍 Estado de autenticación después del login:', { isAuthenticated });
     } catch (error) {
-      console.error('Error en login:', error);
+      console.error('❌ Error en login:', error);
       // El error ya se maneja en el hook useAuth
     }
   };

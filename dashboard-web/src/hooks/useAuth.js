@@ -41,23 +41,36 @@ export const useAuth = () => {
   // Iniciar sesión
   const login = useCallback(async (email, password) => {
     try {
+      console.log('🔄 useAuth: Iniciando login...');
       setIsLoading(true);
       setError(null);
       
       const response = await authService.login(email, password);
+      console.log('📥 useAuth: Respuesta del servicio:', response);
       
       if (response.user) {
+        console.log('👤 useAuth: Actualizando usuario:', response.user);
         setUser(response.user);
         setIsAuthenticated(true);
+        console.log('✅ useAuth: Estado actualizado - isAuthenticated: true');
+        
+        // Forzar re-verificación del estado para asegurar consistencia
+        setTimeout(() => {
+          console.log('🔄 useAuth: Re-verificando estado de autenticación...');
+          checkAuthStatus();
+        }, 100);
+      } else {
+        console.warn('⚠️ useAuth: No se recibió usuario en la respuesta');
       }
       
       return response;
     } catch (error) {
-      console.error('Error en login:', error);
+      console.error('❌ useAuth: Error en login:', error);
       setError(error.message);
       throw error;
     } finally {
       setIsLoading(false);
+      console.log('🏁 useAuth: Login completado, isLoading: false');
     }
   }, []);
 

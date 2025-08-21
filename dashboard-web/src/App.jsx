@@ -9,6 +9,11 @@ function App() {
   const { isAuthenticated, isLoading } = useAuth();
   const [currentPath, setCurrentPath] = useState('/');
 
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log('🔍 App: Estado cambió:', { isAuthenticated, isLoading });
+  }, [isAuthenticated, isLoading]);
+
   // Simular navegación básica (en una app real usarías React Router)
   useEffect(() => {
     const path = window.location.pathname;
