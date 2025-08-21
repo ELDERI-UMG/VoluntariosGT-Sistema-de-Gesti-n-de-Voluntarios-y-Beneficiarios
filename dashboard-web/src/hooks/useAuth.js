@@ -90,6 +90,7 @@ export const useAuth = () => {
   // Cerrar sesión
   const logout = useCallback(async () => {
     try {
+      console.log('🔄 useAuth: Iniciando logout...');
       setIsLoading(true);
       setError(null);
       
@@ -97,12 +98,25 @@ export const useAuth = () => {
       
       setUser(null);
       setIsAuthenticated(false);
+      
+      console.log('✅ useAuth: Logout exitoso - recargando página...');
+      // Forzar recarga de página para volver al login
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      
     } catch (error) {
       console.error('Error en logout:', error);
       setError(error.message);
       // Aún así limpiar el estado local
       setUser(null);
       setIsAuthenticated(false);
+      
+      // Forzar recarga incluso si hubo error
+      console.log('⚠️ useAuth: Error en logout pero limpiando estado - recargando página...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } finally {
       setIsLoading(false);
     }
