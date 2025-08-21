@@ -37,7 +37,8 @@
       "WebFetch(domain:api.render.com)",
       "WebFetch(domain:voluntarios-backend-srv-d2iar3ggjchc73e92ivg.onrender.com)",
       "WebFetch(domain:voluntarios-backend.onrender.com)",
-      "WebFetch(domain:voluntariosgt-sistema-de-gesti-n-de.onrender.com)"
+      "WebFetch(domain:voluntariosgt-sistema-de-gesti-n-de.onrender.com)",
+      "Bash(npm audit:*)"
     ],
     "deny": [],
     "ask": []

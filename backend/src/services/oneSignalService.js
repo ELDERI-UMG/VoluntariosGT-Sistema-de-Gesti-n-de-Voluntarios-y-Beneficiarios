@@ -5,6 +5,13 @@ import { oneSignalMCP } from './oneSignalMCP.js';
  */
 export const sendNotificationToUsers = async (userIds, title, message, data = {}) => {
   try {
+    // Check if OneSignal is configured
+    oneSignalMCP.ensureInitialized();
+    if (!oneSignalMCP.isConfigured) {
+      console.warn('OneSignal no configurado, saltando notificación push');
+      return { warning: 'OneSignal not configured', skipped: true };
+    }
+
     const notification = {
       contents: { 
         en: message, 
@@ -25,7 +32,8 @@ export const sendNotificationToUsers = async (userIds, title, message, data = {}
     return response;
   } catch (error) {
     console.error('Error enviando notificación:', error);
-    throw error;
+    // Don't throw error to prevent service crashes
+    return { error: error.message, failed: true };
   }
 };
 
@@ -45,9 +53,9 @@ export const sendNotificationByTag = async (tagKey, tagValue, title, message, da
       ios_category: 'VOLUNTARIOS_CATEGORY'
     };
 
-    const response = await client.createNotification(notification);
-    console.log('Notificación por tag enviada:', response.body);
-    return response.body;
+    const response = await oneSignalMCP.sendAdvancedNotification(notification);
+    console.log('Notificación por tag enviada:', response);
+    return response;
   } catch (error) {
     console.error('Error enviando notificación por tag:', error);
     throw error;
@@ -70,9 +78,9 @@ export const sendLocationBasedNotification = async (lat, lng, radius, title, mes
       ios_category: 'VOLUNTARIOS_CATEGORY'
     };
 
-    const response = await client.createNotification(notification);
-    console.log('Notificación geolocalizada enviada:', response.body);
-    return response.body;
+    const response = await oneSignalMCP.sendAdvancedNotification(notification);
+    console.log('Notificación geolocalizada enviada:', response);
+    return response;
   } catch (error) {
     console.error('Error enviando notificación geolocalizada:', error);
     throw error;

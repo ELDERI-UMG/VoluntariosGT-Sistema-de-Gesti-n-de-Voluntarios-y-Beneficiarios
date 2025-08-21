@@ -75,9 +75,19 @@ class OneSignalMCP {
    */
   getHeaders(useOrgKey = false) {
     this.ensureInitialized();
+    
+    if (!this.isConfigured) {
+      throw new Error('OneSignal no está configurado correctamente');
+    }
+    
+    const key = useOrgKey ? this.orgKey : this.restApiKey;
+    if (!key) {
+      throw new Error(`OneSignal key no disponible: ${useOrgKey ? 'orgKey' : 'restApiKey'}`);
+    }
+    
     return {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${useOrgKey ? this.orgKey : this.restApiKey}`
+      'Authorization': `Basic ${key}`
     };
   }
 
