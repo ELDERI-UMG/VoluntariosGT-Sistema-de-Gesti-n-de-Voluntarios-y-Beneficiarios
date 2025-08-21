@@ -18,19 +18,31 @@ export const useAuth = () => {
       setIsLoading(true);
       setError(null);
       
+      // Verificar si hay tokens almacenados antes de hacer la llamada
+      const token = authService.getUserData();
+      if (!token) {
+        console.log('🔍 useAuth: No hay datos de usuario almacenados');
+        setUser(null);
+        setIsAuthenticated(false);
+        return;
+      }
+      
       const isAuth = await authService.checkAuthStatus();
       
       if (isAuth) {
         const currentUser = authService.getCurrentUser();
         setUser(currentUser);
         setIsAuthenticated(true);
+        console.log('✅ useAuth: Autenticación verificada exitosamente');
       } else {
         setUser(null);
         setIsAuthenticated(false);
+        console.log('❌ useAuth: Autenticación falló');
       }
     } catch (error) {
-      console.error('Error al verificar autenticación:', error);
-      setError(error.message);
+      console.error('❌ useAuth: Error al verificar autenticación:', error);
+      // No mostrar error en UI para evitar confusión
+      setError(null);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -53,12 +65,6 @@ export const useAuth = () => {
         setUser(response.user);
         setIsAuthenticated(true);
         console.log('✅ useAuth: Estado actualizado - isAuthenticated: true');
-        
-        // Forzar re-verificación del estado para asegurar consistencia
-        setTimeout(() => {
-          console.log('🔄 useAuth: Re-verificando estado de autenticación...');
-          checkAuthStatus();
-        }, 100);
       } else {
         console.warn('⚠️ useAuth: No se recibió usuario en la respuesta');
       }
