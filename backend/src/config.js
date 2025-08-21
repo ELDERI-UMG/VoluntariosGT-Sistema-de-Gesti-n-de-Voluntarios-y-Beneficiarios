@@ -68,8 +68,9 @@ export const config = {
         baseOrigins.push(frontendUrl);
       }
       
-      // Agregar patrones de Vercel
+      // Agregar patrones de Vercel y dominio específico del dashboard
       baseOrigins.push('https://*.vercel.app');
+      baseOrigins.push('https://voluntarios-gt-sistema-de-gesti-n-d.vercel.app');
       
       // Si hay CORS_ALLOWED_ORIGINS, combinarlos
       if (corsOrigins && corsOrigins.length > 0) {
