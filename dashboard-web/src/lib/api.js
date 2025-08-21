@@ -87,11 +87,11 @@ class ApiClient {
       const data = await this.handleResponse(response);
       
       this.saveTokens(
-        data.session.access_token,
-        data.session.refresh_token
+        data.token,
+        data.refreshToken
       );
 
-      return data.session.access_token;
+      return data.token;
     } catch (error) {
       console.error('Error al refrescar token:', error);
       this.clearTokens();
