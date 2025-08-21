@@ -67,12 +67,11 @@ export const useAuth = () => {
         setIsAuthenticated(true);
         console.log('✅ useAuth: Estado actualizado - isAuthenticated: true');
         
-        // Forzar actualización del estado para asegurar re-render
+        // Forzar recarga de página para activar el flujo de verificación inicial
         setTimeout(() => {
-          console.log('🔄 useAuth: Forzando verificación de estado...');
-          setForceUpdate(prev => prev + 1); // Force re-render
-          console.log('✅ useAuth: Estado re-confirmado');
-        }, 50);
+          console.log('🔄 useAuth: Login exitoso - recargando página...');
+          window.location.reload();
+        }, 100);
       } else {
         console.warn('⚠️ useAuth: No se recibió usuario en la respuesta');
       }
