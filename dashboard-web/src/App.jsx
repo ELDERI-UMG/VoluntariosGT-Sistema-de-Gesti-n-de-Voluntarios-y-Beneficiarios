@@ -12,6 +12,11 @@ function App() {
   // Debug: Log state changes
   useEffect(() => {
     console.log('🔍 App: Estado cambió:', { isAuthenticated, isLoading });
+    console.log('📋 App: Decisión de renderizado:', {
+      mostrarLoading: isLoading,
+      mostrarLogin: !isAuthenticated && !isLoading,
+      mostrarDashboard: isAuthenticated && !isLoading
+    });
   }, [isAuthenticated, isLoading]);
 
   // Simular navegación básica (en una app real usarías React Router)
@@ -22,6 +27,7 @@ function App() {
 
   // Mostrar loading mientras se verifica la autenticación
   if (isLoading) {
+    console.log('🔄 App: Renderizando loading...');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -34,10 +40,12 @@ function App() {
 
   // Si no está autenticado, mostrar formulario de login
   if (!isAuthenticated) {
+    console.log('🔐 App: Renderizando login form...');
     return <LoginForm />;
   }
 
   // Si está autenticado, mostrar dashboard
+  console.log('🏠 App: Renderizando dashboard...');
   return (
     <DashboardLayout currentPath={currentPath}>
       <DashboardHome />
