@@ -514,11 +514,11 @@ export const getEstadisticasAdmin = async (req, res) => {
     // Obtener estadísticas básicas del sistema
     const { data: usuarios, error: usuariosError } = await supabaseAdmin
       .from('perfiles')
-      .select('tipo_usuario', { count: 'exact' });
+      .select('rol', { count: 'exact' });
 
     const { data: actividades, error: actividadesError } = await supabaseAdmin
       .from('actividades')
-      .select('estado_actividad', { count: 'exact' });
+      .select('estado', { count: 'exact' });
 
     const { data: inscripciones, error: inscripcionesError } = await supabaseAdmin
       .from('inscripciones')
@@ -533,13 +533,13 @@ export const getEstadisticasAdmin = async (req, res) => {
 
     // Procesar estadísticas de usuarios
     const estadisticasUsuarios = usuarios.reduce((acc, user) => {
-      acc[user.tipo_usuario] = (acc[user.tipo_usuario] || 0) + 1;
+      acc[user.rol] = (acc[user.rol] || 0) + 1;
       return acc;
     }, {});
 
     // Procesar estadísticas de actividades
     const estadisticasActividades = actividades.reduce((acc, actividad) => {
-      acc[actividad.estado_actividad] = (acc[actividad.estado_actividad] || 0) + 1;
+      acc[actividad.estado] = (acc[actividad.estado] || 0) + 1;
       return acc;
     }, {});
 

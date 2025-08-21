@@ -31,20 +31,31 @@ export const authenticateUser = async (req, res, next) => {
       .eq('id', user.id)
       .single();
 
+    // Si no hay perfil en la tabla, usar metadata del usuario de Auth
+    let userInfo;
     if (perfilError || !perfil) {
-      return res.status(404).json({
-        error: 'Perfil de usuario no encontrado'
-      });
+      // Usar metadata de Supabase Auth como fallback
+      userInfo = {
+        id: user.id,
+        email: user.email,
+        rol: user.user_metadata?.role || 'voluntario',
+        verificado: user.user_metadata?.verificado || true,
+        user_metadata: user.user_metadata,
+        perfil: null
+      };
+    } else {
+      userInfo = {
+        id: user.id,
+        email: user.email,
+        rol: perfil.rol,
+        verificado: perfil.verificado,
+        user_metadata: user.user_metadata,
+        perfil: perfil
+      };
     }
 
     // Agregar información del usuario al request
-    req.user = {
-      id: user.id,
-      email: user.email,
-      rol: perfil.rol,
-      verificado: perfil.verificado,
-      perfil: perfil
-    };
+    req.user = userInfo;
 
     next();
   } catch (error) {

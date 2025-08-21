@@ -28,7 +28,7 @@ router.get('/validar/:numeroCertificado', validarCertificado);
 /**
  * @route GET /api/certificados/estadisticas
  * @desc Obtener estadísticas de certificados del usuario
- * @access Private (Voluntarios y beneficiarios)
+ * @access Private (Todos los usuarios autenticados)
  */
 router.get('/estadisticas', authenticateUser, getEstadisticasCertificados);
 

@@ -44,7 +44,7 @@ router.post('/logout', logout);
  * @desc Obtener perfil del usuario actual
  * @access Private
  */
-router.get('/profile', getProfile);
+router.get('/profile', authenticateUser, getProfile);
 
 /**
  * @route PUT /api/auth/profile

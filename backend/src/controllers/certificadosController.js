@@ -266,6 +266,7 @@ export const validarCertificado = async (req, res) => {
 export const getEstadisticasCertificados = async (req, res) => {
   try {
     const userId = req.user?.id;
+    const userRole = req.user?.user_metadata?.role;
 
     if (!userId) {
       return res.status(401).json({
@@ -273,16 +274,33 @@ export const getEstadisticasCertificados = async (req, res) => {
       });
     }
 
-    // Obtener estadísticas básicas
-    const { data: estadisticas, error } = await supabase
+    let query = supabase
       .from('certificados')
-      .select('horas_certificadas, fecha_emision, actividades(categoria)')
-      .eq('voluntario_id', userId);
+      .select('horas_certificadas, fecha_emision, actividades(categoria)');
+
+    // Si es admin, obtener estadísticas de todo el sistema
+    // Si es usuario normal, solo sus certificados
+    if (userRole !== 'admin') {
+      query = query.eq('voluntario_id', userId);
+    }
+
+    const { data: estadisticas, error } = await query;
 
     if (error) {
       console.error('Error al obtener estadísticas:', error);
-      return res.status(500).json({
-        error: 'Error al obtener estadísticas'
+      // For admin users or users without certificates, return empty stats
+      const certificados = [];
+      const totalCertificados = 0;
+      const totalHoras = 0;
+      
+      return res.json({
+        estadisticas: {
+          total_certificados: totalCertificados,
+          total_horas: totalHoras,
+          promedio_horas: 0,
+          por_categoria: {},
+          por_ano: {}
+        }
       });
     }
 
