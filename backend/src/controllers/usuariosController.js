@@ -579,6 +579,70 @@ export const getEstadisticasAdmin = async (req, res) => {
   }
 };
 
+/**
+ * Actualiza el rol de un usuario (solo admins)
+ */
+export const actualizarRolUsuario = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { rol } = req.body;
+    const adminId = req.user?.id;
+
+    if (!adminId) {
+      return res.status(401).json({
+        error: 'Usuario no autenticado'
+      });
+    }
+
+    // Validar que el rol sea válido
+    const rolesValidos = ['voluntario', 'beneficiario', 'entidad', 'admin'];
+    if (!rol || !rolesValidos.includes(rol)) {
+      return res.status(400).json({
+        error: `Rol inválido. Roles válidos: ${rolesValidos.join(', ')}`
+      });
+    }
+
+    // Verificar que el usuario a actualizar existe
+    const { data: usuarioExistente, error: usuarioError } = await supabaseAdmin
+      .from('perfiles')
+      .select('id, email, tipo_usuario')
+      .eq('id', userId)
+      .single();
+
+    if (usuarioError || !usuarioExistente) {
+      return res.status(404).json({
+        error: 'Usuario no encontrado'
+      });
+    }
+
+    // Actualizar el rol del usuario
+    const { data: usuarioActualizado, error } = await supabaseAdmin
+      .from('perfiles')
+      .update({ tipo_usuario: rol })
+      .eq('id', userId)
+      .select('id, email, tipo_usuario')
+      .single();
+
+    if (error) {
+      console.error('Error al actualizar rol de usuario:', error);
+      return res.status(500).json({
+        error: 'Error al actualizar el rol del usuario'
+      });
+    }
+
+    res.json({
+      message: `Rol de usuario actualizado exitosamente de "${usuarioExistente.tipo_usuario}" a "${rol}"`,
+      usuario: usuarioActualizado
+    });
+
+  } catch (error) {
+    console.error('Error en actualizarRolUsuario:', error);
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
+  }
+};
+
 export default {
   getMisInscripciones,
   cancelarInscripcion,
@@ -587,6 +651,7 @@ export default {
   crearEntidad,
   getMiEntidad,
   actualizarDPI,
-  getEstadisticasAdmin
+  getEstadisticasAdmin,
+  actualizarRolUsuario
 };
 

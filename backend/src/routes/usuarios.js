@@ -7,7 +7,8 @@ import {
   crearEntidad,
   getMiEntidad,
   actualizarDPI,
-  getEstadisticasAdmin
+  getEstadisticasAdmin,
+  actualizarRolUsuario
 } from '../controllers/usuariosController.js';
 import {
   authenticateUser,
@@ -74,6 +75,13 @@ router.put('/dpi', authenticateUser, actualizarDPI);
  * @access Private (Solo admins)
  */
 router.get('/estadisticas-admin', authenticateUser, requireAdmin, getEstadisticasAdmin);
+
+/**
+ * @route PUT /api/usuarios/:userId/rol
+ * @desc Actualizar rol de un usuario
+ * @access Private (Solo admins)
+ */
+router.put('/:userId/rol', authenticateUser, requireAdmin, actualizarRolUsuario);
 
 export default router;
 
