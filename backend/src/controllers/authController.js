@@ -61,6 +61,27 @@ const register = async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
 
+    // Generar un token para el usuario recién creado
+    const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (sessionError) {
+      console.error('Error generando sesión para usuario recién creado:', sessionError);
+      // Aún devolver éxito en la creación del usuario
+      return res.status(201).json({
+        message: 'Usuario creado exitosamente',
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          nombre_completo,
+          rol: rol || 'voluntario'
+        }
+      });
+    }
+
+    // Respuesta exitosa con token incluido
     res.status(201).json({
       message: 'Usuario creado exitosamente',
       user: {
@@ -68,7 +89,9 @@ const register = async (req, res) => {
         email: data.user.email,
         nombre_completo,
         rol: rol || 'voluntario'
-      }
+      },
+      token: sessionData.session.access_token,
+      refreshToken: sessionData.session.refresh_token
     });
 
   } catch (error) {
