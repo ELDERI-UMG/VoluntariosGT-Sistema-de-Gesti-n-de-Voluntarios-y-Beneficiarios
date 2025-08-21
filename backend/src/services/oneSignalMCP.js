@@ -1,4 +1,3 @@
-import * as OneSignal from 'onesignal-node';
 import fetch from 'node-fetch';
 
 /**
@@ -13,7 +12,6 @@ class OneSignalMCP {
     this.restApiKey = null;
     this.orgId = null;
     this.orgKey = null;
-    this.client = null;
     
     // URLs de la API de OneSignal
     this.apiUrl = 'https://onesignal.com/api/v1';
@@ -32,9 +30,12 @@ class OneSignalMCP {
     this.orgId = process.env.ONESIGNAL_ORG_ID;
     this.orgKey = process.env.ONESIGNAL_ORG_KEY;
     
-    // Cliente OneSignal
+    // Verificar configuración mínima
     if (this.appId && this.restApiKey) {
-      this.client = new OneSignal.Client(this.appId, this.restApiKey);
+      this.isConfigured = true;
+    } else {
+      this.isConfigured = false;
+      console.warn('OneSignal no está completamente configurado');
     }
     
     this.isInitialized = true;
@@ -280,9 +281,20 @@ class OneSignalMCP {
         ...notificationData
       };
 
-      const response = await this.client.createNotification(finalNotification);
-      console.log('Notificación avanzada enviada:', response.body);
-      return response.body;
+      const response = await fetch(`${this.apiUrl}/notifications`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(finalNotification)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(`Error enviando notificación: ${data.errors || data.error}`);
+      }
+      
+      console.log('Notificación avanzada enviada:', data);
+      return data;
     } catch (error) {
       console.error('Error enviando notificación avanzada:', error);
       throw error;
@@ -310,9 +322,20 @@ class OneSignalMCP {
         ...testData.additional_config
       };
 
-      const response = await this.client.createNotification(notification);
-      console.log('A/B Test iniciado:', response.body);
-      return response.body;
+      const response = await fetch(`${this.apiUrl}/notifications`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(notification)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(`Error creando A/B Test: ${data.errors || data.error}`);
+      }
+      
+      console.log('A/B Test iniciado:', data);
+      return data;
     } catch (error) {
       console.error('Error creando A/B Test:', error);
       throw error;
