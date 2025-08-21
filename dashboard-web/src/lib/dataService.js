@@ -148,15 +148,15 @@ export class DataService {
       const response = await Promise.race([
         apiClient.get('/certificados/estadisticas'),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 3000)
+          setTimeout(() => reject(new Error('Timeout')), 1000) // Timeout más corto
         )
       ]);
       
-      console.log('✅ Datos de certificados cargados');
+      console.log('✅ Datos de certificados cargados del API');
       return response;
       
     } catch (error) {
-      console.warn('⚠️ Certificates API falló, usando datos simulados');
+      console.warn('⚠️ Certificates API falló, usando datos simulados:', error.message);
       return await MockDataService.getCertificatesData();
     }
   }

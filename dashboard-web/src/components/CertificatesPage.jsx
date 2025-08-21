@@ -41,10 +41,40 @@ export const CertificatesPage = () => {
     try {
       setLoading(true);
       const response = await DataService.getCertificatesData();
-      setData(response);
-      setCertificates(response.certificados_recientes || []);
+      
+      // Validar y normalizar datos
+      const normalizedData = {
+        estadisticas: {
+          total_emitidos: response?.estadisticas?.total_emitidos || 0,
+          este_mes: response?.estadisticas?.este_mes || 0,
+          pendientes: response?.estadisticas?.pendientes || 0,
+          templates_activos: response?.estadisticas?.templates_activos || 0
+        },
+        certificados_recientes: response?.certificados_recientes || [],
+        templates: response?.templates || []
+      };
+      
+      setData(normalizedData);
+      setCertificates(normalizedData.certificados_recientes);
+      
     } catch (error) {
       console.error('Error cargando certificados:', error);
+      
+      // Datos de fallback seguros
+      const fallbackData = {
+        estadisticas: {
+          total_emitidos: 0,
+          este_mes: 0,
+          pendientes: 0,
+          templates_activos: 0
+        },
+        certificados_recientes: [],
+        templates: []
+      };
+      
+      setData(fallbackData);
+      setCertificates([]);
+      
     } finally {
       setLoading(false);
     }
@@ -199,7 +229,7 @@ export const CertificatesPage = () => {
                 <Award className="h-5 w-5 text-blue-600" />
                 <div>
                   <p className="text-sm text-gray-600">Total Emitidos</p>
-                  <p className="text-2xl font-bold text-blue-600">{data.estadisticas.total_emitidos.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-blue-600">{(data.estadisticas?.total_emitidos || 0).toLocaleString()}</p>
                 </div>
               </div>
             </CardContent>
@@ -211,7 +241,7 @@ export const CertificatesPage = () => {
                 <Calendar className="h-5 w-5 text-green-600" />
                 <div>
                   <p className="text-sm text-gray-600">Este Mes</p>
-                  <p className="text-2xl font-bold text-green-600">{data.estadisticas.este_mes}</p>
+                  <p className="text-2xl font-bold text-green-600">{data.estadisticas?.este_mes || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -223,7 +253,7 @@ export const CertificatesPage = () => {
                 <FileText className="h-5 w-5 text-orange-600" />
                 <div>
                   <p className="text-sm text-gray-600">Pendientes</p>
-                  <p className="text-2xl font-bold text-orange-600">{data.estadisticas.pendientes}</p>
+                  <p className="text-2xl font-bold text-orange-600">{data.estadisticas?.pendientes || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -235,7 +265,7 @@ export const CertificatesPage = () => {
                 <Users className="h-5 w-5 text-purple-600" />
                 <div>
                   <p className="text-sm text-gray-600">Templates</p>
-                  <p className="text-2xl font-bold text-purple-600">{data.estadisticas.templates_activos}</p>
+                  <p className="text-2xl font-bold text-purple-600">{data.estadisticas?.templates_activos || 0}</p>
                 </div>
               </div>
             </CardContent>
