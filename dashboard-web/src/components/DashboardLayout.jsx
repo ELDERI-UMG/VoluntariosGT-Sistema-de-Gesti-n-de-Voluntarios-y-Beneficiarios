@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
 import { 
@@ -40,6 +40,7 @@ export const DashboardLayout = ({ children }) => {
   const { user, logout, getUserDisplayInfo, getRoleInfo, hasAnyRole } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   
   const userInfo = getUserDisplayInfo();
   const roleInfo = getRoleInfo();
@@ -56,6 +57,11 @@ export const DashboardLayout = ({ children }) => {
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
+  };
+
+  // Manejar navegación a configuración
+  const handleSettingsClick = () => {
+    navigate('/settings');
   };
 
   // Verificar si la ruta está activa
@@ -211,7 +217,7 @@ export const DashboardLayout = ({ children }) => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSettingsClick}>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Configuración</span>
                   </DropdownMenuItem>
