@@ -1,33 +1,22 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginForm } from './components/LoginForm.jsx';
 import { DashboardLayout } from './components/DashboardLayout.jsx';
 import { DashboardHome } from './components/DashboardHome.jsx';
+import { ActivitiesPage } from './components/ActivitiesPage.jsx';
+import { UsersPage } from './components/UsersPage.jsx';
+import { ReportsPage } from './components/ReportsPage.jsx';
+import { CertificatesPage } from './components/CertificatesPage.jsx';
+import { SettingsPage } from './components/SettingsPage.jsx';
 import { useAuth } from './hooks/useAuth.js';
 import './App.css';
 
-function App() {
+// Componente para proteger rutas que requieren autenticación
+const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  const [currentPath, setCurrentPath] = useState('/');
-
-  // Debug: Log state changes
-  useEffect(() => {
-    console.log('🔍 App: Estado cambió:', { isAuthenticated, isLoading });
-    console.log('📋 App: Decisión de renderizado:', {
-      mostrarLoading: isLoading,
-      mostrarLogin: !isAuthenticated && !isLoading,
-      mostrarDashboard: isAuthenticated && !isLoading
-    });
-  }, [isAuthenticated, isLoading]);
-
-  // Simular navegación básica (en una app real usarías React Router)
-  useEffect(() => {
-    const path = window.location.pathname;
-    setCurrentPath(path);
-  }, []);
 
   // Mostrar loading mientras se verifica la autenticación
   if (isLoading) {
-    console.log('🔄 App: Renderizando loading...');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -38,18 +27,56 @@ function App() {
     );
   }
 
-  // Si no está autenticado, mostrar formulario de login
+  // Si no está autenticado, redirigir al login
   if (!isAuthenticated) {
-    console.log('🔐 App: Renderizando login form...');
     return <LoginForm />;
   }
 
-  // Si está autenticado, mostrar dashboard
-  console.log('🏠 App: Renderizando dashboard...');
+  // Si está autenticado, mostrar el contenido protegido
+  return children;
+};
+
+function App() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log('🔍 App: Estado cambió:', { isAuthenticated, isLoading });
+  }, [isAuthenticated, isLoading]);
+
   return (
-    <DashboardLayout currentPath={currentPath}>
-      <DashboardHome />
-    </DashboardLayout>
+    <Router>
+      <Routes>
+        {/* Ruta de login - accesible sin autenticación */}
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />
+          } 
+        />
+        
+        {/* Rutas protegidas del dashboard */}
+        <Route 
+          path="/*" 
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Routes>
+                  <Route path="/" element={<DashboardHome />} />
+                  <Route path="/activities" element={<ActivitiesPage />} />
+                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/reports" element={<ReportsPage />} />
+                  <Route path="/certificates" element={<CertificatesPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  {/* Redirigir rutas no encontradas al dashboard principal */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </DashboardLayout>
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
+    </Router>
   );
 }
 

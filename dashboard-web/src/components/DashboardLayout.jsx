@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
 import { 
@@ -35,9 +36,10 @@ const navigation = [
   { name: 'Configuración', href: '/settings', icon: Settings, roles: ['admin', 'entidad'] },
 ];
 
-export const DashboardLayout = ({ children, currentPath = '/' }) => {
+export const DashboardLayout = ({ children }) => {
   const { user, logout, getUserDisplayInfo, getRoleInfo, hasAnyRole } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
   
   const userInfo = getUserDisplayInfo();
   const roleInfo = getRoleInfo();
@@ -59,9 +61,9 @@ export const DashboardLayout = ({ children, currentPath = '/' }) => {
   // Verificar si la ruta está activa
   const isActiveRoute = (href) => {
     if (href === '/') {
-      return currentPath === '/';
+      return location.pathname === '/';
     }
-    return currentPath.startsWith(href);
+    return location.pathname.startsWith(href);
   };
 
   return (
@@ -86,9 +88,9 @@ export const DashboardLayout = ({ children, currentPath = '/' }) => {
             </div>
             <nav className="flex-1 px-4 py-4 space-y-2">
               {filteredNavigation.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                     isActiveRoute(item.href)
                       ? 'bg-blue-100 text-blue-700'
@@ -98,7 +100,7 @@ export const DashboardLayout = ({ children, currentPath = '/' }) => {
                 >
                   <item.icon className="mr-3 h-5 w-5" />
                   {item.name}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -119,9 +121,9 @@ export const DashboardLayout = ({ children, currentPath = '/' }) => {
           {/* Navegación */}
           <nav className="flex-1 px-4 py-4 space-y-2">
             {filteredNavigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   isActiveRoute(item.href)
                     ? 'bg-blue-100 text-blue-700'
@@ -130,7 +132,7 @@ export const DashboardLayout = ({ children, currentPath = '/' }) => {
               >
                 <item.icon className="mr-3 h-5 w-5" />
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
