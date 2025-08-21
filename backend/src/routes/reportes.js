@@ -26,7 +26,7 @@ router.get('/estadisticas-generales', authenticateUser, requireAdmin, getEstadis
  * @desc Obtener reporte de actividades por período
  * @access Private (Admins y entidades)
  */
-router.get('/actividades', getReporteActividades);
+router.get('/actividades', authenticateUser, getReporteActividades);
 
 /**
  * @route GET /api/reportes/voluntarios
