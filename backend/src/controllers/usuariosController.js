@@ -506,6 +506,79 @@ export const actualizarDPI = async (req, res) => {
   }
 };
 
+/**
+ * Obtiene estadísticas administrativas del sistema
+ */
+export const getEstadisticasAdmin = async (req, res) => {
+  try {
+    // Obtener estadísticas básicas del sistema
+    const { data: usuarios, error: usuariosError } = await supabaseAdmin
+      .from('perfiles')
+      .select('tipo_usuario', { count: 'exact' });
+
+    const { data: actividades, error: actividadesError } = await supabaseAdmin
+      .from('actividades')
+      .select('estado_actividad', { count: 'exact' });
+
+    const { data: inscripciones, error: inscripcionesError } = await supabaseAdmin
+      .from('inscripciones')
+      .select('estado', { count: 'exact' });
+
+    if (usuariosError || actividadesError || inscripcionesError) {
+      console.error('Error obteniendo estadísticas:', { usuariosError, actividadesError, inscripcionesError });
+      return res.status(500).json({
+        error: 'Error al obtener estadísticas del sistema'
+      });
+    }
+
+    // Procesar estadísticas de usuarios
+    const estadisticasUsuarios = usuarios.reduce((acc, user) => {
+      acc[user.tipo_usuario] = (acc[user.tipo_usuario] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Procesar estadísticas de actividades
+    const estadisticasActividades = actividades.reduce((acc, actividad) => {
+      acc[actividad.estado_actividad] = (acc[actividad.estado_actividad] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Procesar estadísticas de inscripciones
+    const estadisticasInscripciones = inscripciones.reduce((acc, inscripcion) => {
+      acc[inscripcion.estado] = (acc[inscripcion.estado] || 0) + 1;
+      return acc;
+    }, {});
+
+    const respuesta = {
+      usuarios: {
+        total: usuarios.length,
+        por_tipo: estadisticasUsuarios
+      },
+      actividades: {
+        total: actividades.length,
+        por_estado: estadisticasActividades
+      },
+      inscripciones: {
+        total: inscripciones.length,
+        por_estado: estadisticasInscripciones
+      },
+      resumen: {
+        usuarios_totales: usuarios.length,
+        actividades_activas: estadisticasActividades.activa || 0,
+        inscripciones_confirmadas: estadisticasInscripciones.confirmada || 0
+      }
+    };
+
+    res.json(respuesta);
+
+  } catch (error) {
+    console.error('Error en getEstadisticasAdmin:', error);
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
+  }
+};
+
 export default {
   getMisInscripciones,
   cancelarInscripcion,
@@ -513,6 +586,7 @@ export default {
   getMisCertificados,
   crearEntidad,
   getMiEntidad,
-  actualizarDPI
+  actualizarDPI,
+  getEstadisticasAdmin
 };
 

@@ -1,0 +1,40 @@
+{
+  "name": "mcp-render-voluntarios",
+  "version": "1.0.0",
+  "description": "MCP (Model Context Protocol) para gestión completa de servicios Render - VoluntariosGT",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node test.js",
+    "deploy": "node deploy.js",
+    "logs": "node logs.js",
+    "status": "node status.js"
+  },
+  "keywords": [
+    "render",
+    "mcp",
+    "deployment",
+    "voluntarios",
+    "guatemala",
+    "devops"
+  ],
+  "author": "VoluntariosGT Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "ws": "^8.14.2",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "inquirer": "^9.2.12",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voluntarios-gt/mcp-render"
+  }
+}

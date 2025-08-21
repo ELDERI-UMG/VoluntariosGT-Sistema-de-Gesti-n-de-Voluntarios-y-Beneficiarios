@@ -30,7 +30,7 @@ router.get('/validar/:numeroCertificado', validarCertificado);
  * @desc Obtener estadísticas de certificados del usuario
  * @access Private (Voluntarios y beneficiarios)
  */
-router.get('/estadisticas', authenticateUser, requireVoluntario, getEstadisticasCertificados);
+router.get('/estadisticas', authenticateUser, getEstadisticasCertificados);
 
 export default router;
 

@@ -6,12 +6,14 @@ import {
   getMisCertificados,
   crearEntidad,
   getMiEntidad,
-  actualizarDPI
+  actualizarDPI,
+  getEstadisticasAdmin
 } from '../controllers/usuariosController.js';
 import {
   authenticateUser,
   requireVoluntario,
   requireEntidad,
+  requireAdmin,
   validatePagination
 } from '../utils/middleware.js';
 
@@ -65,6 +67,13 @@ router.get('/mi-entidad', authenticateUser, requireEntidad, getMiEntidad);
  * @access Private
  */
 router.put('/dpi', authenticateUser, actualizarDPI);
+
+/**
+ * @route GET /api/usuarios/estadisticas-admin
+ * @desc Obtener estadísticas administrativas del sistema
+ * @access Private (Solo admins)
+ */
+router.get('/estadisticas-admin', authenticateUser, requireAdmin, getEstadisticasAdmin);
 
 export default router;
 

@@ -31,7 +31,9 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm run:*)",
-      "Bash(copy:*)"
+      "Bash(copy:*)",
+      "Bash(node:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
