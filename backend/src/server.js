@@ -96,7 +96,8 @@ app.get('/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: config.nodeEnv
+    environment: config.nodeEnv,
+    version: '1.0.1-admin-endpoint'
   });
 });
 
