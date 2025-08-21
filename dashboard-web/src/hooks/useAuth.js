@@ -6,6 +6,7 @@ export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   // Verificar estado de autenticación al cargar
   useEffect(() => {
@@ -65,6 +66,13 @@ export const useAuth = () => {
         setUser(response.user);
         setIsAuthenticated(true);
         console.log('✅ useAuth: Estado actualizado - isAuthenticated: true');
+        
+        // Forzar actualización del estado para asegurar re-render
+        setTimeout(() => {
+          console.log('🔄 useAuth: Forzando verificación de estado...');
+          setForceUpdate(prev => prev + 1); // Force re-render
+          console.log('✅ useAuth: Estado re-confirmado');
+        }, 50);
       } else {
         console.warn('⚠️ useAuth: No se recibió usuario en la respuesta');
       }
@@ -160,6 +168,7 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
+    forceUpdate, // Include force update to trigger re-renders
     
     // Acciones
     login,
