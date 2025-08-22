@@ -77,34 +77,34 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 bg-blue-100 rounded-full">
-              <Shield className="h-8 w-8 text-blue-600" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <Card className="w-full max-w-md turquoise-card soft-glow gentle-shimmer">
+        <CardHeader className="premium-spacing text-center">
+          <div className="flex justify-center mb-6">
+            <div className="p-4 soft-glow luminous-border rounded-2xl bg-gradient-to-br from-white to-turquoise-50">
+              <Shield className="h-10 w-10 text-turquoise-500" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-3xl turquoise-heading mb-2">
             Dashboard Administrativo
           </CardTitle>
-          <CardDescription className="text-gray-600">
-            Ingresa tus credenciales para acceder al panel de administración de VoluntariosGT
+          <CardDescription className="turquoise-text-muted elegant-title">
+            Accede al panel de administración de VoluntariosGT
           </CardDescription>
         </CardHeader>
         
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="premium-spacing">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error general */}
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+              <Alert variant="destructive" className="border-coral-400 bg-gradient-to-r from-coral-400/10 to-coral-500/5">
+                <AlertDescription className="text-coral-500">{error}</AlertDescription>
               </Alert>
             )}
 
             {/* Campo de email */}
-            <div className="space-y-2">
-              <Label htmlFor="email">Correo Electrónico</Label>
+            <div className="space-y-3">
+              <Label htmlFor="email" className="turquoise-subheading text-sm">Correo Electrónico</Label>
               <Input
                 id="email"
                 name="email"
@@ -112,17 +112,17 @@ export const LoginForm = () => {
                 placeholder="admin@voluntariosgt.org"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={validationErrors.email ? 'border-red-500' : ''}
+                className={`turquoise-input elegant-focus ${validationErrors.email ? 'border-coral-400' : ''}`}
                 disabled={isLoading}
               />
               {validationErrors.email && (
-                <p className="text-sm text-red-600">{validationErrors.email}</p>
+                <p className="text-sm text-coral-500 font-medium">{validationErrors.email}</p>
               )}
             </div>
 
             {/* Campo de contraseña */}
-            <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+            <div className="space-y-3">
+              <Label htmlFor="password" className="turquoise-subheading text-sm">Contraseña</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -131,36 +131,36 @@ export const LoginForm = () => {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={validationErrors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                  className={`turquoise-input elegant-focus pr-12 ${validationErrors.password ? 'border-coral-400' : ''}`}
                   disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-turquoise-400 hover:text-turquoise-600 transition-colors duration-200"
                   disabled={isLoading}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-5 w-5" />
                   )}
                 </button>
               </div>
               {validationErrors.password && (
-                <p className="text-sm text-red-600">{validationErrors.password}</p>
+                <p className="text-sm text-coral-500 font-medium">{validationErrors.password}</p>
               )}
             </div>
 
             {/* Botón de envío */}
             <Button
               type="submit"
-              className="w-full"
+              className="w-full btn-turquoise ripple-effect magnetic-hover h-12 text-base font-medium"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-3 h-5 w-5 animate-spin" />
                   Iniciando sesión...
                 </>
               ) : (
@@ -170,18 +170,22 @@ export const LoginForm = () => {
           </form>
 
           {/* Información adicional */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+          <div className="mt-8 text-center">
+            <p className="turquoise-text-muted text-sm">
               Solo administradores y entidades autorizadas pueden acceder
             </p>
           </div>
 
           {/* Credenciales de prueba */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-600 font-medium mb-2">Credenciales de prueba:</p>
-            <div className="text-xs text-gray-500 space-y-1">
-              <p><strong>Admin:</strong> admin@voluntariosgt.org / admin123</p>
-              <p><strong>Entidad:</strong> entidad@ejemplo.org / entidad123</p>
+          <div className="mt-6 p-4 frosted-glass rounded-xl ambient-light">
+            <p className="text-xs turquoise-subheading font-medium mb-3">Credenciales de prueba:</p>
+            <div className="text-xs turquoise-text space-y-2">
+              <div className="p-2 bg-white/40 rounded-lg">
+                <p><span className="font-semibold">Admin:</span> admin@voluntariosgt.org / admin123</p>
+              </div>
+              <div className="p-2 bg-white/40 rounded-lg">
+                <p><span className="font-semibold">Entidad:</span> entidad@ejemplo.org / entidad123</p>
+              </div>
             </div>
           </div>
         </CardContent>
