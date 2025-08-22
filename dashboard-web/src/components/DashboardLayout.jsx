@@ -86,84 +86,104 @@ export const DashboardLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen">
-      {/* Sidebar móvil simplificado */}
+      {/* Sidebar móvil profesional */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Overlay */}
+          {/* Overlay premium */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50" 
+            className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm transition-opacity duration-300" 
             onClick={() => setSidebarOpen(false)} 
           />
           
-          {/* Sidebar content */}
-          <div className="relative w-80 h-full bg-gradient-to-b from-teal-500 to-teal-600 shadow-xl overflow-y-auto">
-            {/* Header */}
-            <div className="flex h-16 items-center justify-between px-4 border-b border-white border-opacity-30 bg-white bg-opacity-10">
-              <div className="flex items-center space-x-2">
-                <Shield className="h-8 w-8 text-white" />
-                <span className="text-lg font-semibold text-white">VoluntariosGT</span>
+          {/* Sidebar content premium */}
+          <div className="relative w-80 h-full turquoise-sidebar shadow-2xl overflow-y-auto border-r border-white border-opacity-20">
+            {/* Header premium */}
+            <div className="flex h-16 items-center justify-between px-6 border-b border-white border-opacity-20 bg-white bg-opacity-5">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-white bg-opacity-10 rounded-xl">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-lg font-medium text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded"
+                className="text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-xl transition-all duration-200"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             
-            {/* Navigation */}
-            <nav className="flex-1 px-4 py-6 space-y-2">
+            {/* Navigation premium */}
+            <nav className="flex-1 px-6 py-8 space-y-3">
               {filteredNavigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center px-4 py-3 text-white rounded-lg transition-colors ${
+                  className={`nav-item-premium flex items-center px-4 py-3 text-white rounded-2xl transition-all duration-300 ${
                     isActiveRoute(item.href)
-                      ? 'bg-white bg-opacity-20 font-semibold'
-                      : 'hover:bg-white hover:bg-opacity-10'
+                      ? 'bg-white bg-opacity-20 shadow-lg transform scale-105 font-medium'
+                      : 'hover:bg-white hover:bg-opacity-10 hover:transform hover:scale-102'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  <span>{item.name}</span>
+                  <div className={`p-2 rounded-xl mr-4 transition-all duration-300 ${
+                    isActiveRoute(item.href) ? 'bg-white bg-opacity-30' : 'bg-white bg-opacity-10'
+                  }`}>
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
+                  {isActiveRoute(item.href) && (
+                    <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  )}
                 </Link>
               ))}
             </nav>
             
-            {/* User info */}
-            <div className="p-4 border-t border-white border-opacity-30">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold">
-                    {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
-                  </span>
+            {/* User info premium */}
+            <div className="p-6 border-t border-white border-opacity-20 bg-white bg-opacity-5">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="relative">
+                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center ring-2 ring-white ring-opacity-30">
+                    <span className="text-white font-semibold text-lg">
+                      {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </span>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
                 </div>
-                <div>
-                  <p className="text-white font-medium text-sm">{userInfo?.name}</p>
-                  <p className="text-white text-opacity-70 text-xs">{roleInfo?.name}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium text-sm truncate" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{userInfo?.name}</p>
+                  <div className="mt-1">
+                    <span className="inline-block bg-white bg-opacity-20 text-white text-opacity-90 text-xs px-2 py-1 rounded-full border border-white border-opacity-30">
+                      {roleInfo?.name}
+                    </span>
+                  </div>
                 </div>
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <button 
-                  className="w-full flex items-center px-3 py-2 text-white hover:bg-white hover:bg-opacity-10 rounded transition-colors"
+                  className="w-full flex items-center px-4 py-3 text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-all duration-200 transform hover:scale-102"
                   onClick={() => {
                     handleSettingsClick();
                     setSidebarOpen(false);
                   }}
                 >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Configuración
+                  <div className="p-1.5 bg-white bg-opacity-10 rounded-lg mr-3">
+                    <Settings className="h-4 w-4" />
+                  </div>
+                  <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Configuración</span>
                 </button>
                 <button 
-                  className="w-full flex items-center px-3 py-2 text-white hover:bg-white hover:bg-opacity-10 rounded transition-colors"
+                  className="w-full flex items-center px-4 py-3 text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-all duration-200 transform hover:scale-102"
                   onClick={() => {
                     handleLogout();
                     setSidebarOpen(false);
                   }}
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Cerrar sesión
+                  <div className="p-1.5 bg-white bg-opacity-10 rounded-lg mr-3">
+                    <LogOut className="h-4 w-4" />
+                  </div>
+                  <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Cerrar sesión</span>
                 </button>
               </div>
             </div>
