@@ -17,7 +17,7 @@ import { useAuth } from '../hooks/useAuth.js';
 import { apiClient } from '../lib/api.js';
 
 export const DashboardHome = () => {
-  const { user, getUserDisplayInfo, getRoleInfo, isAdmin, isEntity } = useAuth();
+  const { getUserDisplayInfo, getRoleInfo, isAdmin, isEntity } = useAuth();
   const [stats, setStats] = useState({
     usuarios: { total: 0, nuevos_mes: 0 },
     actividades: { total: 0, abiertas: 0, completadas: 0 },
@@ -107,6 +107,22 @@ export const DashboardHome = () => {
     });
   };
 
+  const getTimeBasedGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return '🌅';
+    if (hour < 18) return '☀️';
+    return '🌆';
+  };
+
+  const getGreetingMessage = () => {
+    const hour = new Date().getHours();
+    const firstName = userInfo?.name?.split(' ')[0];
+    
+    if (hour < 12) return `Buenos días, ${firstName}`;
+    if (hour < 18) return `Buenas tardes, ${firstName}`;
+    return `Buenas noches, ${firstName}`;
+  };
+
   const getActivityStatusColor = (status) => {
     const colors = {
       'abierta': 'bg-green-100 text-green-800',
@@ -133,200 +149,253 @@ export const DashboardHome = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header de bienvenida */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            ¡Bienvenido, {userInfo?.name?.split(' ')[0]}! 👋
-          </h1>
-          <p className="text-gray-600 mt-1">
-            {roleInfo?.description} - {formatDate(new Date())}
-          </p>
+    <div className="p-6 space-y-8 page-transition">
+      {/* Header de bienvenida mejorado */}
+      <div className="relative">
+        <div className="turquoise-card premium-spacing-sm ambient-light">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {getGreetingMessage()} {getTimeBasedGreeting()}
+              </h1>
+              <p className="text-gray-600 text-lg font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                {roleInfo?.description === 'Administrador del sistema' ? 'Panel de Control Principal' : roleInfo?.description} • {formatDate(new Date())}
+              </p>
+              <div className="flex items-center space-x-4 mt-3">
+                <Badge className="badge-turquoise-outline bg-turquoise-50 text-turquoise-700 border-turquoise-200">
+                  {roleInfo?.name}
+                </Badge>
+                <div className="flex items-center space-x-1 text-sm turquoise-text">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>Sistema Operativo</span>
+                </div>
+              </div>
+            </div>
+            
+            {isEntity() && (
+              <div className="mt-6 sm:mt-0">
+                <Button className="btn-turquoise ripple-effect magnetic-hover shadow-lg">
+                  <Plus className="mr-2 h-5 w-5" />
+                  Crear Actividad
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-        
-        {isEntity() && (
-          <Button className="mt-4 sm:mt-0">
-            <Plus className="mr-2 h-4 w-4" />
-            Crear Actividad
-          </Button>
-        )}
       </div>
 
-      {/* Tarjetas de estadísticas */}
+      {/* Tarjetas de estadísticas mejoradas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Usuarios (solo admin) */}
         {isAdmin() && (
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Usuarios</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.usuarios.total.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                +{stats.usuarios.nuevos_mes} nuevos este mes
-              </p>
-            </CardContent>
-          </Card>
+          <div className="stats-card dashboard-card-interactive stagger-item soft-glow">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="elegant-title">Total Usuarios</p>
+                <div className="soft-number">{stats.usuarios.total.toLocaleString()}</div>
+              </div>
+              <div className="p-3 bg-turquoise-100 rounded-2xl">
+                <Users className="h-8 w-8 text-turquoise-600" />
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1">
+                <TrendingUp className="h-4 w-4 text-green-500" />
+                <span className="text-sm font-medium text-green-600">+{stats.usuarios.nuevos_mes}</span>
+              </div>
+              <span className="text-sm turquoise-text-muted">nuevos este mes</span>
+            </div>
+          </div>
         )}
 
         {/* Actividades */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {isEntity() ? 'Mis Actividades' : 'Total Actividades'}
-            </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.actividades.total.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.actividades.abiertas} abiertas, {stats.actividades.completadas} completadas
-            </p>
-          </CardContent>
-        </Card>
+        <div className="stats-card dashboard-card-interactive stagger-item soft-glow">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="elegant-title">
+                {isEntity() ? 'Mis Actividades' : 'Total Actividades'}
+              </p>
+              <div className="soft-number">{stats.actividades.total.toLocaleString()}</div>
+            </div>
+            <div className="p-3 bg-blue-100 rounded-2xl">
+              <Calendar className="h-8 w-8 text-blue-600" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm turquoise-text">Abiertas</span>
+              <Badge className="bg-green-100 text-green-700 text-xs">{stats.actividades.abiertas}</Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm turquoise-text">Completadas</span>
+              <Badge className="bg-blue-100 text-blue-700 text-xs">{stats.actividades.completadas}</Badge>
+            </div>
+          </div>
+        </div>
 
         {/* Inscripciones */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Inscripciones</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.inscripciones.total.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              +{stats.inscripciones.mes_actual} este mes
-            </p>
-          </CardContent>
-        </Card>
+        <div className="stats-card dashboard-card-interactive stagger-item soft-glow">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="elegant-title">Inscripciones</p>
+              <div className="soft-number">{stats.inscripciones.total.toLocaleString()}</div>
+            </div>
+            <div className="p-3 bg-purple-100 rounded-2xl">
+              <TrendingUp className="h-8 w-8 text-purple-600" />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span className="text-sm font-medium text-purple-600">+{stats.inscripciones.mes_actual}</span>
+            </div>
+            <span className="text-sm turquoise-text-muted">este mes</span>
+          </div>
+        </div>
 
         {/* Certificados */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Certificados</CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.certificados.emitidos.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              +{stats.certificados.mes_actual} este mes
-            </p>
-          </CardContent>
-        </Card>
+        <div className="stats-card dashboard-card-interactive stagger-item soft-glow">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="elegant-title">Certificados</p>
+              <div className="soft-number">{stats.certificados.emitidos.toLocaleString()}</div>
+            </div>
+            <div className="p-3 bg-amber-100 rounded-2xl">
+              <Award className="h-8 w-8 text-amber-600" />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
+              <Award className="h-4 w-4 text-amber-500" />
+              <span className="text-sm font-medium text-amber-600">+{stats.certificados.mes_actual}</span>
+            </div>
+            <span className="text-sm turquoise-text-muted">este mes</span>
+          </div>
+        </div>
       </div>
 
       {/* Contenido principal */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Actividades recientes */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+        {/* Actividades recientes mejoradas */}
+        <div className="lg:col-span-2 turquoise-card gentle-shimmer">
+          <div className="premium-spacing">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <CardTitle>Actividades Recientes</CardTitle>
-                <CardDescription>
+                <h3 className="text-xl font-medium text-gray-800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Actividades Recientes</h3>
+                <p className="text-gray-600 mt-1" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                   Las últimas actividades {isEntity() ? 'creadas por tu organización' : 'del sistema'}
-                </CardDescription>
+                </p>
               </div>
-              <Button variant="outline" size="sm">
+              <Button className="btn-turquoise-outline magnetic-hover">
                 <Eye className="mr-2 h-4 w-4" />
                 Ver todas
               </Button>
             </div>
-          </CardHeader>
-          <CardContent>
             <div className="space-y-4">
               {recentActivities.length > 0 ? (
-                recentActivities.map((activity) => (
-                  <div key={activity.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{activity.titulo}</h4>
-                      <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
-                        <div className="flex items-center">
-                          <Calendar className="mr-1 h-3 w-3" />
-                          {formatDate(activity.fecha_inicio)}
-                        </div>
-                        <div className="flex items-center">
-                          <MapPin className="mr-1 h-3 w-3" />
-                          {activity.direccion_completa?.substring(0, 30)}...
-                        </div>
-                        <div className="flex items-center">
-                          <Users className="mr-1 h-3 w-3" />
-                          {activity.cupos_ocupados || 0}/{activity.cupos_totales}
+                recentActivities.map((activity, index) => (
+                  <div 
+                    key={activity.id} 
+                    className="frosted-glass p-6 rounded-2xl magnetic-hover luminous-border stagger-item"
+                    style={{ animationDelay: `${0.1 * (index + 1)}s` }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 text-lg mb-3" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{activity.titulo}</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <div className="flex items-center space-x-2 text-sm turquoise-text">
+                            <div className="p-1.5 bg-turquoise-100 rounded-lg">
+                              <Calendar className="h-3 w-3 text-turquoise-600" />
+                            </div>
+                            <span>{formatDate(activity.fecha_inicio)}</span>
+                          </div>
+                          <div className="flex items-center space-x-2 text-sm turquoise-text">
+                            <div className="p-1.5 bg-turquoise-100 rounded-lg">
+                              <MapPin className="h-3 w-3 text-turquoise-600" />
+                            </div>
+                            <span className="truncate">{activity.direccion_completa?.substring(0, 25)}...</span>
+                          </div>
+                          <div className="flex items-center space-x-2 text-sm turquoise-text">
+                            <div className="p-1.5 bg-turquoise-100 rounded-lg">
+                              <Users className="h-3 w-3 text-turquoise-600" />
+                            </div>
+                            <span>{activity.cupos_ocupados || 0}/{activity.cupos_totales}</span>
+                          </div>
                         </div>
                       </div>
+                      <Badge className={`${getActivityStatusColor(activity.estado)} ml-4 px-3 py-1`}>
+                        {activity.estado}
+                      </Badge>
                     </div>
-                    <Badge className={getActivityStatusColor(activity.estado)}>
-                      {activity.estado}
-                    </Badge>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Calendar className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-                  <p>No hay actividades recientes</p>
+                <div className="text-center py-12 turquoise-text-muted">
+                  <div className="p-4 bg-turquoise-50 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <Calendar className="h-10 w-10 text-turquoise-400" />
+                  </div>
+                  <p className="text-lg">No hay actividades recientes</p>
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Panel lateral */}
         <div className="space-y-6">
-          {/* Acciones rápidas */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Acciones Rápidas</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+          {/* Acciones rápidas mejoradas */}
+          <div className="turquoise-card premium-spacing-sm">
+            <h3 className="text-lg font-medium text-gray-800 mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Acciones Rápidas</h3>
+            <div className="space-y-3">
               {isEntity() && (
-                <Button className="w-full justify-start">
-                  <Plus className="mr-2 h-4 w-4" />
+                <Button className="w-full justify-start btn-turquoise ripple-effect magnetic-hover">
+                  <Plus className="mr-3 h-5 w-5" />
                   Crear Actividad
                 </Button>
               )}
               
-              <Button variant="outline" className="w-full justify-start">
-                <BarChart3 className="mr-2 h-4 w-4" />
+              <Button className="w-full justify-start btn-turquoise-outline magnetic-hover">
+                <BarChart3 className="mr-3 h-5 w-5" />
                 Ver Reportes
               </Button>
               
-              <Button variant="outline" className="w-full justify-start">
-                <Award className="mr-2 h-4 w-4" />
+              <Button className="w-full justify-start btn-turquoise-outline magnetic-hover">
+                <Award className="mr-3 h-5 w-5" />
                 Certificados
               </Button>
               
               {isAdmin() && (
-                <Button variant="outline" className="w-full justify-start">
-                  <Users className="mr-2 h-4 w-4" />
+                <Button className="w-full justify-start btn-turquoise-outline magnetic-hover">
+                  <Users className="mr-3 h-5 w-5" />
                   Gestionar Usuarios
                 </Button>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Información del sistema */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Estado del Sistema</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Estado</span>
-                <Badge className="bg-green-100 text-green-800">Operativo</Badge>
+          {/* Estado del sistema mejorado */}
+          <div className="turquoise-card premium-spacing-sm pulse-glow">
+            <h3 className="text-lg font-medium text-gray-800 mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Estado del Sistema</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-green-700">Estado</span>
+                </div>
+                <Badge className="bg-green-100 text-green-800 px-3 py-1">Operativo</Badge>
               </div>
               
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Última actualización</span>
-                <span className="text-sm text-gray-900">{formatDate(new Date())}</span>
+              <div className="flex items-center justify-between p-3 bg-turquoise-50 rounded-xl">
+                <span className="text-sm turquoise-text">Última actualización</span>
+                <span className="text-sm font-medium turquoise-text">{formatDate(new Date())}</span>
               </div>
               
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Versión</span>
-                <span className="text-sm text-gray-900">v1.0.0</span>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                <span className="text-sm turquoise-text">Versión</span>
+                <Badge className="badge-turquoise">v1.0.0</Badge>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

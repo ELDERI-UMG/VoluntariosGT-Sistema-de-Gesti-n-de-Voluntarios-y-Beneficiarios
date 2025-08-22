@@ -37,7 +37,7 @@ const navigation = [
 ];
 
 export const DashboardLayout = ({ children }) => {
-  const { user, logout, getUserDisplayInfo, getRoleInfo, hasAnyRole } = useAuth();
+  const { logout, getUserDisplayInfo, getRoleInfo, hasAnyRole } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ export const DashboardLayout = ({ children }) => {
             <div className="flex h-16 items-center justify-between px-4 border-b border-white/20">
               <div className="flex items-center space-x-2">
                 <Shield className="h-8 w-8 text-white" />
-                <span className="text-lg font-bold text-white">VoluntariosGT</span>
+                <span className="text-lg font-medium text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
               </div>
               <Button
                 variant="ghost"
@@ -97,15 +97,17 @@ export const DashboardLayout = ({ children }) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`nav-item flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`nav-item-premium flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${
                     isActiveRoute(item.href)
-                      ? 'active'
-                      : ''
+                      ? 'active bg-white/20 text-white shadow-lg'
+                      : 'text-turquoise-100 hover:bg-white/10'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
+                  <div className="p-2 rounded-xl bg-white/10 mr-4">
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
                 </Link>
               ))}
             </nav>
@@ -120,42 +122,52 @@ export const DashboardLayout = ({ children }) => {
           <div className="flex h-16 items-center px-4 border-b border-white/20">
             <div className="flex items-center space-x-2">
               <Shield className="h-8 w-8 text-white" />
-              <span className="text-lg font-bold text-white">VoluntariosGT</span>
+              <span className="text-lg font-medium text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
             </div>
           </div>
 
-          {/* Navegación */}
-          <nav className="flex-1 px-4 py-4 space-y-2">
+          {/* Navegación mejorada */}
+          <nav className="flex-1 px-4 py-6 space-y-3">
             {filteredNavigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`nav-item flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`nav-item-premium flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ripple-effect ${
                   isActiveRoute(item.href)
-                    ? 'active'
-                    : ''
+                    ? 'active bg-white/20 text-white shadow-xl transform scale-105'
+                    : 'text-turquoise-100 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
+                <div className={`p-2 rounded-xl mr-4 transition-all duration-300 ${
+                  isActiveRoute(item.href) ? 'bg-white/30' : 'bg-white/10'
+                }`}>
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
+                {isActiveRoute(item.href) && (
+                  <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                )}
               </Link>
             ))}
           </nav>
 
-          {/* Información del usuario */}
-          <div className="p-4 border-t border-white/20">
-            <div className="flex items-center space-x-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={userInfo?.avatar} />
-                <AvatarFallback className="bg-white text-turquoise-600">
-                  {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
+          {/* Información del usuario mejorada */}
+          <div className="p-6 border-t border-white/20 bg-white/5">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Avatar className="h-12 w-12 ring-2 ring-white/30">
+                  <AvatarImage src={userInfo?.avatar} />
+                  <AvatarFallback className="bg-white text-turquoise-600 font-semibold">
+                    {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+              </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
+                <p className="text-sm font-medium text-white truncate mb-1" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                   {userInfo?.name}
                 </p>
-                <Badge className="badge-turquoise-outline bg-white/20 text-white border-white/40 text-xs">
+                <Badge className="bg-white/20 text-white border-white/40 text-xs px-2 py-1 rounded-full">
                   {roleInfo?.name}
                 </Badge>
               </div>
@@ -179,11 +191,19 @@ export const DashboardLayout = ({ children }) => {
               <Menu className="h-5 w-5" />
             </Button>
 
-            {/* Título de la página */}
+            {/* Título de la página mejorado */}
             <div className="flex-1 lg:flex-none">
-              <h1 className="text-lg font-semibold text-turquoise-700">
-                Dashboard Administrativo
-              </h1>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-turquoise-100 rounded-xl">
+                  <BarChart3 className="h-5 w-5 text-turquoise-600" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-medium text-gray-800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                    Dashboard Administrativo
+                  </h1>
+                  <p className="text-sm text-gray-600" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Panel de control principal</p>
+                </div>
+              </div>
             </div>
 
             {/* Acciones del header */}
