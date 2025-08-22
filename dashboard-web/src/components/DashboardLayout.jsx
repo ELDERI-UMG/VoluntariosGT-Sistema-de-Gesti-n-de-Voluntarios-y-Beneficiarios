@@ -44,6 +44,7 @@ export const DashboardLayout = ({ children }) => {
 
   // Prevenir scroll del body cuando el menú está abierto
   useEffect(() => {
+    console.log('Sidebar state changed:', sidebarOpen);
     if (sidebarOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -89,97 +90,95 @@ export const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen">
       {/* Sidebar para móvil */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300" 
-            onClick={() => setSidebarOpen(false)} 
-          />
-          <div className="fixed inset-y-0 left-0 flex w-80 flex-col turquoise-sidebar shadow-2xl transform transition-transform duration-300 ease-out">
-            <div className="flex h-16 items-center justify-between px-4 border-b border-white/20 bg-white/5">
-              <div className="flex items-center space-x-2">
-                <Shield className="h-8 w-8 text-white" />
-                <span className="text-lg font-medium text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarOpen(false)}
-                className="text-white hover:bg-white/20 transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </Button>
+      <div className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ${sidebarOpen ? 'visible opacity-100' : 'invisible opacity-0'}`}>
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300" 
+          onClick={() => setSidebarOpen(false)} 
+        />
+        <div className={`fixed inset-y-0 left-0 flex w-80 flex-col turquoise-sidebar shadow-2xl transform transition-transform duration-300 ease-out z-[110] ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="flex h-16 items-center justify-between px-4 border-b border-white/20 bg-white/5">
+            <div className="flex items-center space-x-2">
+              <Shield className="h-8 w-8 text-white" />
+              <span className="text-lg font-medium text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
             </div>
-            <nav className="flex-1 px-4 py-6 space-y-3 overflow-y-auto">
-              {filteredNavigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`nav-item-premium flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${
-                    isActiveRoute(item.href)
-                      ? 'active bg-white/20 text-white shadow-lg transform scale-105'
-                      : 'text-turquoise-100 hover:bg-white/10 hover:text-white'
-                  }`}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <div className={`p-2 rounded-xl mr-4 transition-all duration-300 ${
-                    isActiveRoute(item.href) ? 'bg-white/30' : 'bg-white/10'
-                  }`}>
-                    <item.icon className="h-5 w-5" />
-                  </div>
-                  <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
-                  {isActiveRoute(item.href) && (
-                    <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  )}
-                </Link>
-              ))}
-            </nav>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(false)}
+              className="text-white hover:bg-white/20 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          <nav className="flex-1 px-4 py-6 space-y-3 overflow-y-auto">
+            {filteredNavigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`nav-item-premium flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${
+                  isActiveRoute(item.href)
+                    ? 'active bg-white/20 text-white shadow-lg transform scale-105'
+                    : 'text-turquoise-100 hover:bg-white/10 hover:text-white'
+                }`}
+                onClick={() => setSidebarOpen(false)}
+              >
+                <div className={`p-2 rounded-xl mr-4 transition-all duration-300 ${
+                  isActiveRoute(item.href) ? 'bg-white/30' : 'bg-white/10'
+                }`}>
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
+                {isActiveRoute(item.href) && (
+                  <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                )}
+              </Link>
+            ))}
+          </nav>
+          
+          {/* Información del usuario en móvil */}
+          <div className="p-6 border-t border-white/20 bg-white/5">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Avatar className="h-12 w-12 ring-2 ring-white/30">
+                  <AvatarImage src={userInfo?.avatar} />
+                  <AvatarFallback className="bg-white text-turquoise-600 font-semibold">
+                    {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate mb-1" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                  {userInfo?.name}
+                </p>
+                <Badge className="bg-white/20 text-white border-white/40 text-xs px-2 py-1 rounded-full">
+                  {roleInfo?.name}
+                </Badge>
+              </div>
+            </div>
             
-            {/* Información del usuario en móvil */}
-            <div className="p-6 border-t border-white/20 bg-white/5">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <Avatar className="h-12 w-12 ring-2 ring-white/30">
-                    <AvatarImage src={userInfo?.avatar} />
-                    <AvatarFallback className="bg-white text-turquoise-600 font-semibold">
-                      {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate mb-1" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-                    {userInfo?.name}
-                  </p>
-                  <Badge className="bg-white/20 text-white border-white/40 text-xs px-2 py-1 rounded-full">
-                    {roleInfo?.name}
-                  </Badge>
-                </div>
-              </div>
-              
-              {/* Botones de acción en móvil */}
-              <div className="mt-4 space-y-2">
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-white hover:bg-white/10"
-                  onClick={handleSettingsClick}
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Configuración
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-white hover:bg-white/10"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Cerrar sesión
-                </Button>
-              </div>
+            {/* Botones de acción en móvil */}
+            <div className="mt-4 space-y-2">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-white hover:bg-white/10"
+                onClick={handleSettingsClick}
+              >
+                <Settings className="mr-2 h-4 w-4" />
+                Configuración
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-white hover:bg-white/10"
+                onClick={handleLogout}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Cerrar sesión
+              </Button>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Sidebar para desktop */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
@@ -251,8 +250,11 @@ export const DashboardLayout = ({ children }) => {
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden p-2 rounded-xl hover:bg-turquoise-100 transition-colors"
-              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-xl hover:bg-turquoise-100 transition-colors z-10"
+              onClick={() => {
+                console.log('Abriendo sidebar móvil');
+                setSidebarOpen(true);
+              }}
             >
               <Menu className="h-6 w-6 text-turquoise-600" />
             </Button>
@@ -326,4 +328,3 @@ export const DashboardLayout = ({ children }) => {
     </div>
   );
 };
-
