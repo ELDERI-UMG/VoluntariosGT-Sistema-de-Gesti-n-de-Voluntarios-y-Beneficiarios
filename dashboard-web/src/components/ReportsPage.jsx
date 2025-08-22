@@ -17,7 +17,7 @@ import {
 } from 'recharts';
 import { Download, TrendingUp, Users, Calendar, FileText } from 'lucide-react';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+const COLORS = ['#14b8a6', '#0d9488', '#2dd4bf', '#5eead4', '#99f6e4'];
 
 export const ReportsPage = () => {
   const [reportData, setReportData] = useState(null);
@@ -88,7 +88,7 @@ export const ReportsPage = () => {
       <div className="space-y-6">
         <h1 className="text-3xl font-bold text-gray-900">Reportes y Estadísticas</h1>
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="turquoise-loading w-12 h-12"></div>
           <span className="ml-3 text-gray-600">Cargando datos...</span>
         </div>
       </div>
@@ -98,8 +98,8 @@ export const ReportsPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Reportes y Estadísticas</h1>
-        <Button onClick={loadReportData} variant="outline">
+        <h1 className="text-3xl font-bold text-turquoise-700">Reportes y Estadísticas</h1>
+        <Button onClick={loadReportData} className="btn-turquoise-outline">
           🔄 Actualizar Datos
         </Button>
       </div>
@@ -107,49 +107,49 @@ export const ReportsPage = () => {
       {/* Estadísticas principales */}
       {reportData && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5 text-blue-600" />
+                <Calendar className="h-5 w-5 text-turquoise-600" />
                 <div>
                   <p className="text-sm text-gray-600">Total Actividades</p>
-                  <p className="text-2xl font-bold text-blue-600">{reportData.total_actividades}</p>
+                  <p className="text-2xl font-bold text-turquoise-600">{reportData.total_actividades}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+                <TrendingUp className="h-5 w-5 text-turquoise-500" />
                 <div>
                   <p className="text-sm text-gray-600">Crecimiento</p>
-                  <p className="text-2xl font-bold text-green-600">{reportData.tendencias?.crecimiento || '+15%'}</p>
+                  <p className="text-2xl font-bold text-turquoise-500">{reportData.tendencias?.crecimiento || '+15%'}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5 text-purple-600" />
+                <Users className="h-5 w-5 text-turquoise-400" />
                 <div>
                   <p className="text-sm text-gray-600">En Progreso</p>
-                  <p className="text-2xl font-bold text-purple-600">{reportData.actividades_por_estado?.en_progreso || 0}</p>
+                  <p className="text-2xl font-bold text-turquoise-400">{reportData.actividades_por_estado?.en_progreso || 0}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <FileText className="h-5 w-5 text-orange-600" />
+                <FileText className="h-5 w-5 text-amber-500" />
                 <div>
                   <p className="text-sm text-gray-600">Completadas</p>
-                  <p className="text-2xl font-bold text-orange-600">{reportData.actividades_por_estado?.completada || 0}</p>
+                  <p className="text-2xl font-bold text-amber-500">{reportData.actividades_por_estado?.completada || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -159,9 +159,9 @@ export const ReportsPage = () => {
       
       {/* Acciones de reportes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
+        <Card className="turquoise-card">
           <CardHeader>
-            <CardTitle>Reporte de Actividades</CardTitle>
+            <CardTitle className="text-turquoise-700">Reporte de Actividades</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
@@ -170,16 +170,16 @@ export const ReportsPage = () => {
             <Button 
               onClick={() => handleGenerateReport('actividades')}
               disabled={loadingActions.actividades}
-              className="w-full"
+              className="w-full btn-turquoise"
             >
               {loadingActions.actividades ? '⏳ Generando...' : '📊 Generar Reporte'}
             </Button>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="turquoise-card">
           <CardHeader>
-            <CardTitle>Reporte de Voluntarios</CardTitle>
+            <CardTitle className="text-turquoise-700">Reporte de Voluntarios</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
@@ -188,17 +188,16 @@ export const ReportsPage = () => {
             <Button 
               onClick={() => handleGenerateReport('voluntarios')}
               disabled={loadingActions.voluntarios}
-              variant="secondary"
-              className="w-full"
+              className="w-full btn-turquoise-outline"
             >
               {loadingActions.voluntarios ? '⏳ Generando...' : '👥 Generar Reporte'}
             </Button>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="turquoise-card">
           <CardHeader>
-            <CardTitle>Exportar Datos</CardTitle>
+            <CardTitle className="text-turquoise-700">Exportar Datos</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
@@ -207,8 +206,7 @@ export const ReportsPage = () => {
             <Button 
               onClick={() => handleDownloadCSV('actividades')}
               disabled={loadingActions.csv}
-              variant="outline"
-              className="w-full"
+              className="w-full btn-turquoise-outline"
             >
               <Download className="mr-2 h-4 w-4" />
               {loadingActions.csv ? '⏳ Descargando...' : 'Exportar CSV'}
@@ -220,9 +218,9 @@ export const ReportsPage = () => {
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Gráfico de barras - Tendencias mensuales */}
-        <Card>
+        <Card className="turquoise-chart">
           <CardHeader>
-            <CardTitle>Tendencias Mensuales</CardTitle>
+            <CardTitle className="text-turquoise-700">Tendencias Mensuales</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -231,17 +229,17 @@ export const ReportsPage = () => {
                 <XAxis dataKey="mes" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="actividades" fill="#3B82F6" />
-                <Bar dataKey="participantes" fill="#10B981" />
+                <Bar dataKey="actividades" fill="#14b8a6" />
+                <Bar dataKey="participantes" fill="#0d9488" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         {/* Gráfico de pastel - Categorías */}
-        <Card>
+        <Card className="turquoise-chart">
           <CardHeader>
-            <CardTitle>Actividades por Categoría</CardTitle>
+            <CardTitle className="text-turquoise-700">Actividades por Categoría</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>

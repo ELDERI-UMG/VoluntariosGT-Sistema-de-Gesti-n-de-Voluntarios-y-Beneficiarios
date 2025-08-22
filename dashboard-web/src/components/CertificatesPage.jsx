@@ -183,12 +183,14 @@ export const CertificatesPage = () => {
             <Button 
               onClick={() => handleGenerateIndividual(formData)}
               disabled={loadingActions.individual || !formData.voluntario || !formData.actividad}
+              className="btn-turquoise"
             >
               {loadingActions.individual ? '⏳ Generando...' : '📄 Generar Certificado'}
             </Button>
             <Button 
               variant="outline"
               onClick={() => setShowGenerateForm(false)}
+              className="btn-turquoise-outline"
             >
               Cancelar
             </Button>
@@ -223,49 +225,49 @@ export const CertificatesPage = () => {
       {/* Estadísticas principales */}
       {data && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Award className="h-5 w-5 text-blue-600" />
+                <Award className="h-5 w-5 text-turquoise-600" />
                 <div>
                   <p className="text-sm text-gray-600">Total Emitidos</p>
-                  <p className="text-2xl font-bold text-blue-600">{(data.estadisticas?.total_emitidos || 0).toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-turquoise-600">{(data.estadisticas?.total_emitidos || 0).toLocaleString()}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5 text-green-600" />
+                <Calendar className="h-5 w-5 text-turquoise-500" />
                 <div>
                   <p className="text-sm text-gray-600">Este Mes</p>
-                  <p className="text-2xl font-bold text-green-600">{data.estadisticas?.este_mes || 0}</p>
+                  <p className="text-2xl font-bold text-turquoise-500">{data.estadisticas?.este_mes || 0}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <FileText className="h-5 w-5 text-orange-600" />
+                <FileText className="h-5 w-5 text-amber-500" />
                 <div>
                   <p className="text-sm text-gray-600">Pendientes</p>
-                  <p className="text-2xl font-bold text-orange-600">{data.estadisticas?.pendientes || 0}</p>
+                  <p className="text-2xl font-bold text-amber-500">{data.estadisticas?.pendientes || 0}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="stats-card">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5 text-purple-600" />
+                <Users className="h-5 w-5 text-turquoise-400" />
                 <div>
                   <p className="text-sm text-gray-600">Templates</p>
-                  <p className="text-2xl font-bold text-purple-600">{data.estadisticas?.templates_activos || 0}</p>
+                  <p className="text-2xl font-bold text-turquoise-400">{data.estadisticas?.templates_activos || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -275,9 +277,9 @@ export const CertificatesPage = () => {
 
       {/* Acciones rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+        <Card className="turquoise-card">
           <CardHeader>
-            <CardTitle>Generación de Certificados</CardTitle>
+            <CardTitle className="text-turquoise-700">Generación de Certificados</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -289,6 +291,7 @@ export const CertificatesPage = () => {
                 <Button 
                   onClick={() => setShowGenerateForm(true)}
                   disabled={loadingActions.individual}
+                  className="btn-turquoise"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Generar
@@ -303,7 +306,7 @@ export const CertificatesPage = () => {
                 <Button 
                   onClick={handleGenerateBatch}
                   disabled={loadingActions.batch}
-                  variant="secondary"
+                  className="btn-turquoise-outline"
                 >
                   {loadingActions.batch ? '⏳ Generando...' : '👥 Generar Lote'}
                 </Button>
@@ -313,9 +316,9 @@ export const CertificatesPage = () => {
         </Card>
 
         {/* Templates disponibles */}
-        <Card>
+        <Card className="turquoise-card">
           <CardHeader>
-            <CardTitle>Templates Disponibles</CardTitle>
+            <CardTitle className="text-turquoise-700">Templates Disponibles</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -339,9 +342,9 @@ export const CertificatesPage = () => {
       {showGenerateForm && <GenerateForm />}
 
       {/* Búsqueda y filtros */}
-      <Card>
+      <Card className="turquoise-card">
         <CardHeader>
-          <CardTitle>Certificados Emitidos</CardTitle>
+          <CardTitle className="text-turquoise-700">Certificados Emitidos</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex space-x-2 mb-4">
@@ -349,7 +352,7 @@ export const CertificatesPage = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  className="pl-10"
+                  className="pl-10 turquoise-input"
                   placeholder="Buscar por voluntario, actividad o ID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -357,7 +360,7 @@ export const CertificatesPage = () => {
               </div>
             </div>
             <select 
-              className="px-3 py-2 border border-gray-300 rounded-lg"
+              className="px-3 py-2 turquoise-input"
               value={filters.estado || ''}
               onChange={(e) => setFilters({...filters, estado: e.target.value})}
             >
@@ -386,7 +389,7 @@ export const CertificatesPage = () => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" className="btn-turquoise-outline">
                     <Download className="h-4 w-4" />
                   </Button>
                 </div>
