@@ -96,93 +96,79 @@ export const DashboardLayout = ({ children }) => {
           />
           
           {/* Sidebar content premium */}
-          <div className="relative w-80 h-full turquoise-sidebar shadow-2xl overflow-y-auto border-r border-white border-opacity-20">
+          <div className="relative w-72 h-full turquoise-sidebar shadow-2xl overflow-y-auto border-r border-turquoise-400 border-opacity-30">
             {/* Header premium */}
-            <div className="flex h-16 items-center justify-between px-6 border-b border-white border-opacity-20 bg-white bg-opacity-5">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-white bg-opacity-10 rounded-xl">
-                  <Shield className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-lg font-medium text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
+            <div className="flex h-14 items-center justify-between px-4 border-b border-turquoise-400 border-opacity-30">
+              <div className="flex items-center space-x-2">
+                <Shield className="h-6 w-6 text-turquoise-100" />
+                <span className="text-base font-medium text-turquoise-100" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>VoluntariosGT</span>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-xl transition-all duration-200"
+                className="text-turquoise-200 hover:text-white hover:bg-turquoise-700 p-1.5 rounded-lg transition-all duration-200"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
             
             {/* Navigation premium */}
-            <nav className="flex-1 px-6 py-8 space-y-3">
+            <nav className="flex-1 px-4 py-4 space-y-1">
               {filteredNavigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`nav-item-premium flex items-center px-4 py-3 text-white rounded-2xl transition-all duration-300 ${
+                  className={`flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 ${
                     isActiveRoute(item.href)
-                      ? 'bg-white bg-opacity-20 shadow-lg transform scale-105 font-medium'
-                      : 'hover:bg-white hover:bg-opacity-10 hover:transform hover:scale-102'
+                      ? 'bg-turquoise-700 text-white shadow-md font-medium'
+                      : 'text-turquoise-100 hover:bg-turquoise-700 hover:text-white'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <div className={`p-2 rounded-xl mr-4 transition-all duration-300 ${
-                    isActiveRoute(item.href) ? 'bg-white bg-opacity-30' : 'bg-white bg-opacity-10'
-                  }`}>
-                    <item.icon className="h-5 w-5" />
-                  </div>
-                  <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
+                  <item.icon className="h-4 w-4 mr-3" />
+                  <span className="text-sm font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{item.name}</span>
                   {isActiveRoute(item.href) && (
-                    <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <div className="ml-auto w-1.5 h-1.5 bg-turquoise-200 rounded-full"></div>
                   )}
                 </Link>
               ))}
             </nav>
             
             {/* User info premium */}
-            <div className="p-6 border-t border-white border-opacity-20 bg-white bg-opacity-5">
-              <div className="flex items-center space-x-4 mb-6">
+            <div className="p-4 border-t border-turquoise-400 border-opacity-30">
+              <div className="flex items-center space-x-3 mb-4">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center ring-2 ring-white ring-opacity-30">
-                    <span className="text-white font-semibold text-lg">
+                  <div className="w-9 h-9 bg-turquoise-700 rounded-full flex items-center justify-center">
+                    <span className="text-turquoise-100 font-semibold text-sm">
                       {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
                     </span>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border border-turquoise-600"></div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{userInfo?.name}</p>
-                  <div className="mt-1">
-                    <span className="inline-block bg-white bg-opacity-20 text-white text-opacity-90 text-xs px-2 py-1 rounded-full border border-white border-opacity-30">
-                      {roleInfo?.name}
-                    </span>
-                  </div>
+                  <p className="text-turquoise-100 font-medium text-sm truncate" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{userInfo?.name}</p>
+                  <p className="text-turquoise-300 text-xs truncate">{roleInfo?.name}</p>
                 </div>
               </div>
               
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <button 
-                  className="w-full flex items-center px-4 py-3 text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-all duration-200 transform hover:scale-102"
+                  className="w-full flex items-center px-3 py-2 text-turquoise-100 hover:bg-turquoise-700 hover:text-white rounded-lg transition-all duration-200 text-sm"
                   onClick={() => {
                     handleSettingsClick();
                     setSidebarOpen(false);
                   }}
                 >
-                  <div className="p-1.5 bg-white bg-opacity-10 rounded-lg mr-3">
-                    <Settings className="h-4 w-4" />
-                  </div>
+                  <Settings className="h-4 w-4 mr-3" />
                   <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Configuración</span>
                 </button>
                 <button 
-                  className="w-full flex items-center px-4 py-3 text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-all duration-200 transform hover:scale-102"
+                  className="w-full flex items-center px-3 py-2 text-turquoise-100 hover:bg-turquoise-700 hover:text-white rounded-lg transition-all duration-200 text-sm"
                   onClick={() => {
                     handleLogout();
                     setSidebarOpen(false);
                   }}
                 >
-                  <div className="p-1.5 bg-white bg-opacity-10 rounded-lg mr-3">
-                    <LogOut className="h-4 w-4" />
-                  </div>
+                  <LogOut className="h-4 w-4 mr-3" />
                   <span className="font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Cerrar sesión</span>
                 </button>
               </div>
