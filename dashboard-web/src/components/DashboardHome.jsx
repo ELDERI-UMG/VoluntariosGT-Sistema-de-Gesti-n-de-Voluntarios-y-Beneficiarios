@@ -149,19 +149,19 @@ export const DashboardHome = () => {
   }
 
   return (
-    <div className="p-6 space-y-8 page-transition">
+    <div className="p-4 md:p-6 space-y-6 md:space-y-8 page-transition">
       {/* Header de bienvenida mejorado */}
       <div className="relative">
-        <div className="turquoise-card premium-spacing-sm ambient-light">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="turquoise-card p-4 md:p-6 ambient-light">
+          <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                 {getGreetingMessage()} {getTimeBasedGreeting()}
               </h1>
-              <p className="text-gray-600 text-lg font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+              <p className="text-gray-600 text-base md:text-lg font-medium" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                 {roleInfo?.description === 'Administrador del sistema' ? 'Panel de Control Principal' : roleInfo?.description} • {formatDate(new Date())}
               </p>
-              <div className="flex items-center space-x-4 mt-3">
+              <div className="flex flex-wrap items-center gap-3 mt-3">
                 <Badge className="badge-turquoise-outline bg-turquoise-50 text-turquoise-700 border-turquoise-200">
                   {roleInfo?.name}
                 </Badge>
@@ -173,8 +173,8 @@ export const DashboardHome = () => {
             </div>
             
             {isEntity() && (
-              <div className="mt-6 sm:mt-0">
-                <Button className="btn-turquoise ripple-effect magnetic-hover shadow-lg">
+              <div className="mt-4 sm:mt-0 w-full sm:w-auto">
+                <Button className="btn-turquoise ripple-effect magnetic-hover shadow-lg w-full sm:w-auto">
                   <Plus className="mr-2 h-5 w-5" />
                   Crear Actividad
                 </Button>
@@ -185,7 +185,7 @@ export const DashboardHome = () => {
       </div>
 
       {/* Tarjetas de estadísticas mejoradas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {/* Usuarios (solo admin) */}
         {isAdmin() && (
           <div className="stats-card dashboard-card-interactive stagger-item soft-glow">
@@ -278,10 +278,10 @@ export const DashboardHome = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Actividades recientes mejoradas */}
         <div className="lg:col-span-2 turquoise-card gentle-shimmer">
-          <div className="premium-spacing">
+          <div className="p-4 md:p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-medium text-gray-800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Actividades Recientes</h3>
+                <h3 className="text-lg md:text-xl font-medium text-gray-800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Actividades Recientes</h3>
                 <p className="text-gray-600 mt-1" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                   Las últimas actividades {isEntity() ? 'creadas por tu organización' : 'del sistema'}
                 </p>
@@ -296,13 +296,13 @@ export const DashboardHome = () => {
                 recentActivities.map((activity, index) => (
                   <div 
                     key={activity.id} 
-                    className="frosted-glass p-6 rounded-2xl magnetic-hover luminous-border stagger-item"
+                    className="frosted-glass p-4 md:p-6 rounded-2xl magnetic-hover luminous-border stagger-item"
                     style={{ animationDelay: `${0.1 * (index + 1)}s` }}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-lg mb-3" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{activity.titulo}</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <h4 className="font-medium text-gray-900 text-base md:text-lg mb-3" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{activity.titulo}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <div className="flex items-center space-x-2 text-sm turquoise-text">
                             <div className="p-1.5 bg-turquoise-100 rounded-lg">
                               <Calendar className="h-3 w-3 text-turquoise-600" />
@@ -344,8 +344,8 @@ export const DashboardHome = () => {
         {/* Panel lateral */}
         <div className="space-y-6">
           {/* Acciones rápidas mejoradas */}
-          <div className="turquoise-card premium-spacing-sm">
-            <h3 className="text-lg font-medium text-gray-800 mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Acciones Rápidas</h3>
+          <div className="turquoise-card p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-medium text-gray-800 mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Acciones Rápidas</h3>
             <div className="space-y-3">
               {isEntity() && (
                 <Button className="w-full justify-start btn-turquoise ripple-effect magnetic-hover">
@@ -374,8 +374,8 @@ export const DashboardHome = () => {
           </div>
 
           {/* Estado del sistema mejorado */}
-          <div className="turquoise-card premium-spacing-sm pulse-glow">
-            <h3 className="text-lg font-medium text-gray-800 mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Estado del Sistema</h3>
+          <div className="turquoise-card p-4 md:p-6 pulse-glow">
+            <h3 className="text-base md:text-lg font-medium text-gray-800 mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Estado del Sistema</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
                 <div className="flex items-center space-x-2">

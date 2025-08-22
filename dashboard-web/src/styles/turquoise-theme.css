@@ -198,7 +198,7 @@ body::after {
   background: var(--bg-gradient-card);
   border: 1px solid rgba(20, 184, 166, 0.12);
   border-radius: 1.75rem;
-  padding: 2rem;
+  padding: 1.5rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -207,6 +207,12 @@ body::after {
     0 4px 16px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
+}
+
+@media (min-width: 768px) {
+  .stats-card {
+    padding: 2rem;
+  }
 }
 
 .stats-card::before {
@@ -355,9 +361,15 @@ body::after {
 .soft-number {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 600;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: rgb(31, 41, 55);
   opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .soft-number {
+    font-size: 2.5rem;
+  }
 }
 
 /* Premium Spacing Classes */
@@ -480,6 +492,54 @@ body::after {
   
   .turquoise-sidebar.open {
     transform: translateX(0);
+  }
+  
+  .elegant-title {
+    font-size: 0.75rem;
+  }
+  
+  .soft-number {
+    font-size: 1.75rem;
+  }
+  
+  .turquoise-card {
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  
+  .frosted-glass {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+  
+  /* Mejoras específicas para móvil */
+  .page-transition {
+    padding: 0.75rem;
+  }
+  
+  .stagger-item {
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Botones más grandes en móvil */
+  .btn-turquoise,
+  .btn-turquoise-outline {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Grid más compacto en móvil */
+  .grid {
+    gap: 0.75rem;
+  }
+  
+  /* Mejores márgenes en móvil */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 0.75rem;
   }
 }
 
