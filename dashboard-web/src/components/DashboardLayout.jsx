@@ -240,85 +240,143 @@ export const DashboardLayout = ({ children }) => {
 
       {/* Contenido principal */}
       <div className="lg:pl-64">
-        {/* Header */}
+        {/* Header mejorado para móvil */}
         <header className="turquoise-header shadow-sm border-b border-white/10">
-          <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-            {/* Botón de menú móvil */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden p-2 rounded-xl hover:bg-turquoise-100 transition-colors z-10"
-              onClick={() => {
-                console.log('Abriendo sidebar móvil');
-                setSidebarOpen(!sidebarOpen);
-              }}
-            >
-              <Menu className="h-6 w-6 text-turquoise-600" />
-            </Button>
+          {/* Header móvil */}
+          <div className="lg:hidden">
+            <div className="flex h-14 items-center justify-between px-4">
+              {/* Botón de menú móvil */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 rounded-xl hover:bg-turquoise-100 transition-colors"
+                onClick={() => {
+                  console.log('Abriendo sidebar móvil');
+                  setSidebarOpen(!sidebarOpen);
+                }}
+              >
+                <Menu className="h-5 w-5 text-turquoise-600" />
+              </Button>
 
-            {/* Título de la página */}
-            <div className="flex-1 lg:flex-none">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-turquoise-100 rounded-xl">
-                  <BarChart3 className="h-5 w-5 text-turquoise-600" />
+              {/* Logo móvil */}
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-turquoise-100 rounded-lg">
+                  <BarChart3 className="h-4 w-4 text-turquoise-600" />
+                </div>
+                <span className="text-base font-semibold text-gray-800">VoluntariosGT</span>
+              </div>
+
+              {/* Avatar móvil */}
+              <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-turquoise-50 p-0">
+                <div className="w-7 h-7 bg-turquoise-100 rounded-full flex items-center justify-center">
+                  <span className="text-turquoise-700 font-medium text-xs">
+                    {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </span>
+                </div>
+              </Button>
+            </div>
+            
+            {/* Título móvil separado */}
+            <div className="px-4 py-3 bg-turquoise-50 border-b border-turquoise-100">
+              <h1 className="text-lg font-semibold text-gray-800 mb-1">Dashboard Administrativo</h1>
+              <p className="text-sm text-gray-600">Panel de control principal</p>
+            </div>
+          </div>
+
+          {/* Header desktop mejorado */}
+          <div className="hidden lg:flex h-20 items-center justify-between px-6 lg:px-8">
+            {/* Título de la página desktop premium */}
+            <div className="flex-1">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-gradient-to-br from-turquoise-100 to-turquoise-200 rounded-2xl shadow-sm">
+                  <BarChart3 className="h-6 w-6 text-turquoise-600" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-medium text-gray-800">
+                  <h1 className="text-2xl font-semibold text-gray-800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                     Dashboard Administrativo
                   </h1>
-                  <p className="text-sm text-gray-600">Panel de control principal</p>
+                  <p className="text-base text-gray-600 mt-0.5" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Panel de control principal • VoluntariosGT</p>
                 </div>
               </div>
             </div>
 
-            {/* Acciones del header */}
-            <div className="flex items-center space-x-4">
-              {/* Notificaciones */}
-              <Button variant="ghost" size="sm" className="text-turquoise-600 hover:bg-turquoise-50">
-                <Bell className="h-5 w-5" />
-              </Button>
+            {/* Acciones del header desktop premium */}
+            <div className="flex items-center space-x-6">
+              {/* Notificaciones premium */}
+              <div className="relative">
+                <Button variant="ghost" size="sm" className="text-turquoise-600 hover:bg-turquoise-50 p-3 rounded-xl transition-all duration-200">
+                  <Bell className="h-5 w-5" />
+                </Button>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              </div>
 
-              {/* Menú de usuario */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-turquoise-50">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={userInfo?.avatar} />
-                      <AvatarFallback className="bg-turquoise-100 text-turquoise-700">
-                        {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {userInfo?.name}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {userInfo?.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSettingsClick} className="hover:bg-turquoise-50 hover:text-turquoise-700">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Configuración</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="hover:bg-coral-50 hover:text-coral-600">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Cerrar sesión</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {/* Separador visual */}
+              <div className="w-px h-8 bg-gray-200"></div>
+
+              {/* Usuario premium */}
+              <div className="flex items-center space-x-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{userInfo?.name}</p>
+                  <p className="text-xs text-gray-500">{roleInfo?.name}</p>
+                </div>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative p-0 rounded-full hover:ring-2 hover:ring-turquoise-200 transition-all duration-200">
+                      <div className="relative">
+                        <Avatar className="h-10 w-10 ring-2 ring-turquoise-100">
+                          <AvatarImage src={userInfo?.avatar} />
+                          <AvatarFallback className="bg-gradient-to-br from-turquoise-100 to-turquoise-200 text-turquoise-700 font-semibold">
+                            {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-64 mt-2" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal p-4">
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={userInfo?.avatar} />
+                          <AvatarFallback className="bg-turquoise-100 text-turquoise-700">
+                            {userInfo?.name?.charAt(0)?.toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {userInfo?.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {userInfo?.email}
+                          </p>
+                          <div className="mt-1">
+                            <span className="inline-block bg-turquoise-100 text-turquoise-700 text-xs px-2 py-0.5 rounded-full">
+                              {roleInfo?.name}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSettingsClick} className="hover:bg-turquoise-50 hover:text-turquoise-700 p-3">
+                      <Settings className="mr-3 h-4 w-4" />
+                      <span>Configuración</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-50 hover:text-red-600 p-3">
+                      <LogOut className="mr-3 h-4 w-4" />
+                      <span>Cerrar sesión</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Contenido de la página */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 md:p-6">
           {children}
         </main>
       </div>
