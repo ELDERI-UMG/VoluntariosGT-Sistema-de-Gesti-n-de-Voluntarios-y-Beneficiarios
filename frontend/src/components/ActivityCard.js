@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { COLORS, STYLE_CONFIG } from '../constants/config';
+import { COLORS } from '../constants/colors';
+import { STYLE_CONFIG } from '../constants/config';
 import { activitiesService } from '../services/activities';
 import { locationService } from '../services/location';
 

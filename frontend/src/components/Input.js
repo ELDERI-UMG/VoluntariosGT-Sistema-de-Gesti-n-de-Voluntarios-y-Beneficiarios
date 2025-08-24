@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, TouchableOpacity } from 'react-native';
-import { COLORS, STYLE_CONFIG } from '../constants/config';
+import { COLORS } from '../constants/colors';
+import { STYLE_CONFIG } from '../constants/config';
 
 const Input = ({
   label,

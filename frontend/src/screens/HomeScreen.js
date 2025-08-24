@@ -11,7 +11,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Button from '../components/Button';
-import { COLORS, STYLE_CONFIG } from '../constants/config';
+import Card from '../components/Card';
+import GradientBackground from '../components/GradientBackground';
+import { COLORS } from '../constants/colors';
+import { APP_CONFIG, STYLE_CONFIG } from '../constants/config';
 import { apiClient } from '../services/api';
 
 const { width } = Dimensions.get('window');
@@ -58,20 +61,31 @@ const HomeScreen = ({ navigation }) => {
   // Cargar estadísticas del usuario
   const loadUserStats = async () => {
     try {
+      console.log('🔍 Cargando estadísticas para usuario:', user?.email, 'rol:', user?.rol);
+      
       if (user?.rol === 'voluntario' || user?.rol === 'beneficiario') {
+        console.log('📊 Solicitando estadísticas de voluntario/beneficiario');
         const response = await apiClient.get('/usuarios/estadisticas');
+        console.log('✅ Estadísticas recibidas:', response.estadisticas);
         setStats(response.estadisticas || stats);
       } else if (user?.rol === 'entidad') {
+        console.log('📊 Solicitando estadísticas de entidad');
         const response = await apiClient.get('/reportes/actividades?limite=1');
-        setStats({
+        const newStats = {
           actividades_creadas: response.reporte?.total_actividades || 0,
           total_inscripciones: response.reporte?.total_inscripciones || 0,
           horas_planificadas: response.reporte?.total_horas_planificadas || 0,
           actividades_completadas: response.reporte?.actividades_por_estado?.completada || 0,
-        });
+        };
+        console.log('✅ Estadísticas entidad calculadas:', newStats);
+        setStats(newStats);
+      } else {
+        console.log('⚠️ Rol no reconocido o usuario sin rol:', user?.rol);
       }
     } catch (error) {
-      console.error('Error al cargar estadísticas:', error);
+      console.error('❌ Error al cargar estadísticas:', error);
+      console.error('❌ Detalles del error:', error.message);
+      console.error('❌ Status del error:', error.status);
     }
   };
 
@@ -92,25 +106,41 @@ const HomeScreen = ({ navigation }) => {
     setIsRefreshing(false);
   };
 
-  // Renderizar tarjeta de estadística
+  // Renderizar tarjeta de estadística con diseño mejorado
   const renderStatCard = (title, value, icon, color = COLORS.primary) => (
-    <View
+    <GradientBackground
+      colors={[COLORS.white, COLORS.backgroundSecondary]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={{
-        backgroundColor: COLORS.white,
-        borderRadius: STYLE_CONFIG.borderRadius.lg,
-        padding: STYLE_CONFIG.spacing.md,
+        borderRadius: STYLE_CONFIG.borderRadius.xl,
+        padding: STYLE_CONFIG.spacing.lg,
         marginHorizontal: STYLE_CONFIG.spacing.xs,
         minWidth: (width - 60) / 2,
         alignItems: 'center',
-        ...STYLE_CONFIG.shadows.sm,
+        ...STYLE_CONFIG.shadows.lg,
+        borderWidth: 1,
+        borderColor: COLORS.borderLight,
       }}
     >
-      <Text style={{ fontSize: 32, marginBottom: STYLE_CONFIG.spacing.xs }}>
-        {icon}
-      </Text>
+      {/* Icono con fondo circular */}
+      <View
+        style={{
+          backgroundColor: `${color}20`,
+          borderRadius: 50,
+          width: 64,
+          height: 64,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: STYLE_CONFIG.spacing.md,
+        }}
+      >
+        <Text style={{ fontSize: 28 }}>{icon}</Text>
+      </View>
+      
       <Text
         style={{
-          fontSize: STYLE_CONFIG.fontSize['2xl'],
+          fontSize: STYLE_CONFIG.fontSize['3xl'],
           fontWeight: STYLE_CONFIG.fontWeight.bold,
           color: color,
           marginBottom: STYLE_CONFIG.spacing.xs,
@@ -123,55 +153,68 @@ const HomeScreen = ({ navigation }) => {
           fontSize: STYLE_CONFIG.fontSize.sm,
           color: COLORS.textSecondary,
           textAlign: 'center',
+          fontWeight: STYLE_CONFIG.fontWeight.medium,
         }}
       >
         {title}
       </Text>
-    </View>
+    </GradientBackground>
   );
 
-  // Renderizar tarjeta de actividad
+  // Renderizar tarjeta de actividad con diseño premium
   const renderActivityCard = (activity) => (
-    <TouchableOpacity
+    <Card
       key={activity.id}
-      style={{
-        backgroundColor: COLORS.white,
-        borderRadius: STYLE_CONFIG.borderRadius.lg,
-        padding: STYLE_CONFIG.spacing.md,
-        marginBottom: STYLE_CONFIG.spacing.md,
-        ...STYLE_CONFIG.shadows.sm,
-      }}
+      shadow="lg"
+      padding={STYLE_CONFIG.spacing.lg}
+      style={{ marginBottom: STYLE_CONFIG.spacing.lg }}
       onPress={() => navigation.navigate('Activities', { activityId: activity.id })}
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <View style={{ flex: 1 }}>
+          {/* Título con mejor tipografía */}
           <Text
             style={{
-              fontSize: STYLE_CONFIG.fontSize.lg,
-              fontWeight: STYLE_CONFIG.fontWeight.semibold,
+              fontSize: STYLE_CONFIG.fontSize.xl,
+              fontWeight: STYLE_CONFIG.fontWeight.bold,
               color: COLORS.textPrimary,
               marginBottom: STYLE_CONFIG.spacing.xs,
+              lineHeight: 24,
             }}
           >
             {activity.titulo}
           </Text>
           
-          <Text
-            style={{
-              fontSize: STYLE_CONFIG.fontSize.sm,
-              color: COLORS.textSecondary,
-              marginBottom: STYLE_CONFIG.spacing.sm,
-            }}
-          >
-            {activity.entidades?.nombre_organizacion}
-          </Text>
-          
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, marginRight: 4 }}>📅</Text>
+          {/* Organización con icono */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: STYLE_CONFIG.spacing.sm }}>
+            <Text style={{ fontSize: 16, marginRight: 6 }}>🏢</Text>
             <Text
               style={{
                 fontSize: STYLE_CONFIG.fontSize.sm,
                 color: COLORS.textSecondary,
+                fontWeight: STYLE_CONFIG.fontWeight.medium,
+              }}
+            >
+              {activity.entidades?.nombre_organizacion}
+            </Text>
+          </View>
+          
+          {/* Fecha con mejor diseño */}
+          <View style={{ 
+            flexDirection: 'row', 
+            alignItems: 'center',
+            backgroundColor: COLORS.backgroundSecondary,
+            paddingHorizontal: STYLE_CONFIG.spacing.sm,
+            paddingVertical: STYLE_CONFIG.spacing.xs,
+            borderRadius: STYLE_CONFIG.borderRadius.md,
+            alignSelf: 'flex-start',
+          }}>
+            <Text style={{ fontSize: 14, marginRight: 4 }}>📅</Text>
+            <Text
+              style={{
+                fontSize: STYLE_CONFIG.fontSize.sm,
+                color: COLORS.textPrimary,
+                fontWeight: STYLE_CONFIG.fontWeight.medium,
               }}
             >
               {new Date(activity.fecha_inicio).toLocaleDateString('es-GT')}
@@ -179,26 +222,30 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
         
-        <View
+        {/* Categoría con gradiente */}
+        <GradientBackground
+          colors={COLORS.gradientPrimary}
           style={{
-            backgroundColor: COLORS.primary + '20',
-            paddingHorizontal: STYLE_CONFIG.spacing.sm,
-            paddingVertical: STYLE_CONFIG.spacing.xs,
-            borderRadius: STYLE_CONFIG.borderRadius.md,
+            paddingHorizontal: STYLE_CONFIG.spacing.md,
+            paddingVertical: STYLE_CONFIG.spacing.sm,
+            borderRadius: STYLE_CONFIG.borderRadius.full,
+            ...STYLE_CONFIG.shadows.sm,
           }}
         >
           <Text
             style={{
               fontSize: STYLE_CONFIG.fontSize.xs,
-              color: COLORS.primary,
-              fontWeight: STYLE_CONFIG.fontWeight.medium,
+              color: COLORS.white,
+              fontWeight: STYLE_CONFIG.fontWeight.bold,
+              textTransform: 'uppercase',
+              letterSpacing: 0.5,
             }}
           >
             {activity.categoria}
           </Text>
-        </View>
+        </GradientBackground>
       </View>
-    </TouchableOpacity>
+    </Card>
   );
 
   if (isLoading) {
@@ -218,51 +265,94 @@ const HomeScreen = ({ navigation }) => {
           />
         }
       >
-        {/* Header de bienvenida */}
-        <View style={{ marginBottom: STYLE_CONFIG.spacing.xl }}>
-          <Text
+        {/* Header de bienvenida con diseño premium */}
+        <Card
+          shadow="lg"
+          style={{
+            marginBottom: STYLE_CONFIG.spacing.xl,
+            borderWidth: 1,
+            borderColor: COLORS.borderLight,
+          }}
+        >
+          {/* Gradiente de fondo sutil */}
+          <GradientBackground
+            colors={[COLORS.white, COLORS.backgroundSecondary]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={{
-              fontSize: STYLE_CONFIG.fontSize['2xl'],
-              fontWeight: STYLE_CONFIG.fontWeight.bold,
-              color: COLORS.textPrimary,
-              marginBottom: STYLE_CONFIG.spacing.xs,
+              borderRadius: STYLE_CONFIG.borderRadius.lg,
+              padding: STYLE_CONFIG.spacing.lg,
+              marginHorizontal: -STYLE_CONFIG.spacing.md,
+              marginVertical: -STYLE_CONFIG.spacing.md,
             }}
           >
-            ¡Hola, {userInfo?.name?.split(' ')[0]}! 👋
-          </Text>
-          
-          <Text
-            style={{
-              fontSize: STYLE_CONFIG.fontSize.base,
-              color: COLORS.textSecondary,
-            }}
-          >
-            {roleInfo?.description}
-          </Text>
-          
-          {!userInfo?.verified && (
-            <View
-              style={{
-                backgroundColor: COLORS.warning + '20',
-                borderColor: COLORS.warning,
-                borderWidth: 1,
-                borderRadius: STYLE_CONFIG.borderRadius.lg,
-                padding: STYLE_CONFIG.spacing.md,
-                marginTop: STYLE_CONFIG.spacing.md,
-              }}
-            >
-              <Text
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: STYLE_CONFIG.spacing.md }}>
+              <View
                 style={{
-                  color: COLORS.warning,
-                  fontSize: STYLE_CONFIG.fontSize.sm,
-                  textAlign: 'center',
+                  backgroundColor: COLORS.primary + '20',
+                  borderRadius: 50,
+                  width: 60,
+                  height: 60,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: STYLE_CONFIG.spacing.md,
                 }}
               >
-                ⚠️ Tu cuenta aún no está verificada. Completa tu perfil para acceder a todas las funciones.
-              </Text>
+                <Text style={{ fontSize: 28 }}>👋</Text>
+              </View>
+              
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    fontSize: STYLE_CONFIG.fontSize['3xl'],
+                    fontWeight: STYLE_CONFIG.fontWeight.bold,
+                    color: COLORS.textPrimary,
+                    marginBottom: 2,
+                  }}
+                >
+                  ¡Hola, {userInfo?.name?.split(' ')[0]}!
+                </Text>
+                
+                <Text
+                  style={{
+                    fontSize: STYLE_CONFIG.fontSize.base,
+                    color: COLORS.textSecondary,
+                    fontWeight: STYLE_CONFIG.fontWeight.medium,
+                  }}
+                >
+                  {roleInfo?.description}
+                </Text>
+              </View>
             </View>
-          )}
-        </View>
+            
+            {!userInfo?.verified && (
+              <Card
+                backgroundColor={COLORS.warning + '10'}
+                borderRadius={STYLE_CONFIG.borderRadius.lg}
+                padding={STYLE_CONFIG.spacing.md}
+                style={{
+                  borderWidth: 1,
+                  borderColor: COLORS.warning + '30',
+                }}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={{ fontSize: 20, marginRight: STYLE_CONFIG.spacing.sm }}>⚠️</Text>
+                  <Text
+                    style={{
+                      color: COLORS.warning,
+                      fontSize: STYLE_CONFIG.fontSize.sm,
+                      fontWeight: STYLE_CONFIG.fontWeight.medium,
+                      flex: 1,
+                      lineHeight: 20,
+                    }}
+                  >
+                    Tu cuenta aún no está verificada. Completa tu perfil para acceder a todas las funciones.
+                  </Text>
+                </View>
+              </Card>
+            )}
+          </GradientBackground>
+        </Card>
 
         {/* Estadísticas */}
         <View style={{ marginBottom: STYLE_CONFIG.spacing.xl }}>

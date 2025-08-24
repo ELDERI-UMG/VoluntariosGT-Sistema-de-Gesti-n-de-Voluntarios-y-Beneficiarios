@@ -60,7 +60,9 @@ export const config = {
       const baseOrigins = [
         'http://localhost:3000',
         'http://localhost:5173',
-        'http://localhost:8081'
+        'http://localhost:8081',
+        'http://localhost:8084',
+        'http://localhost:8085'
       ];
       
       // Si hay FRONTEND_URL específica, agregarla

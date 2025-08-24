@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Sistema integral de gestión de voluntarios y beneficiarios para Guatemala",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "setup": "./setup.sh",
     "start": "./start.sh",
@@ -21,7 +22,13 @@
     "test": "echo \"Tests not implemented yet\" && exit 0",
     "lint": "echo \"Linting not configured yet\" && exit 0",
     "clean": "rm -rf */node_modules && rm -rf logs/*.log",
-    "docs": "echo \"Opening documentation...\" && open docs/manual-usuario.md"
+    "docs": "echo \"Opening documentation...\" && open docs/manual-usuario.md",
+    "diagnose": "node scripts/diagnostics.js",
+    "logs": "node scripts/viewLogs.js",
+    "health": "curl http://localhost:5000/health || curl http://localhost:5001/health",
+    "cleanup": "node scripts/cleanup-ports.js",
+    "fix-imports": "node scripts/fix-imports.js",
+    "frontend": "cd frontend && npx expo start --port 8084 --web"
   },
   "repository": {
     "type": "git",

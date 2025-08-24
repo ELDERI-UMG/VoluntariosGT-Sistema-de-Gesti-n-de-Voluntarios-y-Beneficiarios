@@ -2,6 +2,120 @@ import { supabase, supabaseAdmin } from '../config.js';
 import { sanitizeText, validateDPI } from '../utils/validation.js';
 
 /**
+ * Obtiene las estadísticas del usuario actual
+ */
+export const getEstadisticasUsuario = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const userRole = req.user?.user_metadata?.role;
+
+    if (!userId) {
+      return res.status(401).json({
+        error: 'Usuario no autenticado'
+      });
+    }
+
+    let estadisticas = {};
+
+    if (userRole === 'voluntario' || userRole === 'beneficiario') {
+      // Estadísticas para voluntarios y beneficiarios
+      const [
+        actividadesDisponibles,
+        misInscripciones,
+        horasCompletadas,
+        certificados
+      ] = await Promise.all([
+        // Actividades disponibles
+        supabase
+          .from('actividades')
+          .select('id')
+          .eq('estado', 'abierta'),
+          
+        // Mis inscripciones
+        supabase
+          .from('inscripciones')
+          .select('id, estado')
+          .eq('user_id', userId),
+          
+        // Horas completadas (actividades completadas)
+        supabase
+          .from('inscripciones')
+          .select('actividades!inner(duracion_estimada)')
+          .eq('user_id', userId)
+          .eq('estado', 'completado'),
+          
+        // Certificados obtenidos
+        supabase
+          .from('certificados')
+          .select('id')
+          .eq('user_id', userId)
+      ]);
+
+      const horasTotal = horasCompletadas.data?.reduce((total, inscripcion) => {
+        const duracion = inscripcion.actividades?.duracion_estimada || 0;
+        return total + duracion;
+      }, 0) || 0;
+
+      estadisticas = {
+        actividades_disponibles: actividadesDisponibles.data?.length || 0,
+        mis_inscripciones: misInscripciones.data?.length || 0,
+        horas_completadas: horasTotal,
+        certificados: certificados.data?.length || 0
+      };
+
+    } else if (userRole === 'entidad') {
+      // Estadísticas para entidades
+      const [
+        actividadesCreadas,
+        totalInscripciones,
+        horasPlanificadas,
+        actividadesCompletadas
+      ] = await Promise.all([
+        // Actividades creadas
+        supabase
+          .from('actividades')
+          .select('id, duracion_estimada')
+          .eq('entidad_id', userId),
+          
+        // Total inscripciones en mis actividades
+        supabase
+          .from('inscripciones')
+          .select('id, actividades!inner(entidad_id)')
+          .eq('actividades.entidad_id', userId),
+          
+        // Actividades completadas
+        supabase
+          .from('actividades')
+          .select('id')
+          .eq('entidad_id', userId)
+          .eq('estado', 'completada')
+      ]);
+
+      const horasTotal = actividadesCreadas.data?.reduce((total, actividad) => {
+        const duracion = actividad.duracion_estimada || 0;
+        return total + duracion;
+      }, 0) || 0;
+
+      estadisticas = {
+        actividades_creadas: actividadesCreadas.data?.length || 0,
+        total_inscripciones: totalInscripciones.data?.length || 0,
+        horas_planificadas: horasTotal,
+        actividades_completadas: actividadesCompletadas.data?.length || 0
+      };
+    }
+
+    res.json({ estadisticas });
+
+  } catch (error) {
+    console.error('Error obteniendo estadísticas del usuario:', error);
+    res.status(500).json({
+      error: 'Error interno del servidor',
+      details: error.message
+    });
+  }
+};
+
+/**
  * Obtiene las inscripciones del usuario actual
  */
 export const getMisInscripciones = async (req, res) => {

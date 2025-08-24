@@ -3,7 +3,8 @@ import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
-import { COLORS, STYLE_CONFIG } from '../constants/config';
+import { COLORS } from '../constants/colors';
+import { STYLE_CONFIG } from '../constants/config';
 
 const ProfileScreen = () => {
   const { user, logout, getUserDisplayInfo, getRoleInfo } = useAuth();

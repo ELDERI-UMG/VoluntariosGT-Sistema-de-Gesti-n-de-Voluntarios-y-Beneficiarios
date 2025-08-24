@@ -13,7 +13,8 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { COLORS, STYLE_CONFIG, APP_CONFIG } from '../constants/config';
+import { COLORS } from '../constants/colors';
+import { STYLE_CONFIG, APP_CONFIG } from '../constants/config';
 
 const RegisterScreen = ({ navigation }) => {
   const { register, isLoading, error, clearError, validateEmail, validateDPI, validatePassword } = useAuth();

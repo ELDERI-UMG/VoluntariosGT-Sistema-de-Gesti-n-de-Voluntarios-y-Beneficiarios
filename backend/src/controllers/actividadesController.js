@@ -17,16 +17,35 @@ export const getActividades = async (req, res) => {
       estado = 'abierta',
       lat,
       lon,
-      radio = 5
+      radio = 5,
+      incluir_ubicacion = false
     } = req.query;
 
     // Handle dashboard compatibility
     const finalLimit = limite || limit;
     const orderBy = orden || 'fecha_inicio';
 
+    // Seleccionar campos con entidades
+    let selectFields = `
+      *,
+      entidades!inner(
+        id,
+        nombre_organizacion,
+        tipo_organizacion
+      )
+    `;
+    
+    // Si se solicita ubicación, agregar coordenadas extraídas
+    if (incluir_ubicacion) {
+      selectFields += `,
+      ST_X(ubicacion) as longitud,
+      ST_Y(ubicacion) as latitud
+      `;
+    }
+
     let query = supabase
       .from('actividades')
-      .select('*');
+      .select(selectFields);
 
     // Filter by estado only if specified
     if (estado && estado !== 'all') {

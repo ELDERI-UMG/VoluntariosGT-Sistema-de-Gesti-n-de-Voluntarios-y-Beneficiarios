@@ -3,6 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { config } from './config.js';
+import { logger, requestLogger, errorLogger } from './utils/logger.js';
+import { errorHandler, notFoundHandler } from './utils/errorHandler.js';
 
 // Importar rutas
 import authRoutes from './routes/auth.js';
@@ -24,7 +26,7 @@ app.use(helmet({
 const allowedOrigins = config.cors.allowedOrigins;
 
 // Log de dominios permitidos para debug
-console.log('🌐 CORS - Dominios permitidos:', allowedOrigins);
+logger.info('CORS - Dominios permitidos', { allowedOrigins });
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -42,14 +44,13 @@ app.use(cors({
     });
     
     if (isAllowed) {
-      console.log('✅ CORS permitido para:', origin);
+      logger.debug('CORS permitido', { origin });
       callback(null, true);
     } else {
-      console.log('❌ CORS bloqueado para:', origin);
-      console.log('Dominios permitidos:', allowedOrigins);
+      logger.warn('CORS bloqueado', { origin, allowedOrigins });
       // En desarrollo, permitir todos los origins para testing
       if (config.nodeEnv === 'development') {
-        console.log('⚠️ Modo desarrollo: permitiendo origin bloqueado');
+        logger.warn('Modo desarrollo: permitiendo origin bloqueado', { origin });
         callback(null, true);
       } else {
         callback(new Error('No permitido por la política CORS'));
@@ -75,11 +76,8 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Middleware de logging
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
-});
+// Middleware de logging de peticiones
+app.use(requestLogger);
 
 // Rutas de la API
 app.use('/api/auth', authRoutes);
@@ -119,38 +117,26 @@ app.get('/', (req, res) => {
   });
 });
 
+// Middleware de logging de errores
+app.use(errorLogger);
+
 // Middleware de manejo de errores
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  
-  if (err.type === 'entity.parse.failed') {
-    return res.status(400).json({
-      error: 'JSON inválido en el cuerpo de la solicitud'
-    });
-  }
-  
-  res.status(err.status || 500).json({
-    error: config.nodeEnv === 'production' 
-      ? 'Error interno del servidor' 
-      : err.message,
-    ...(config.nodeEnv !== 'production' && { stack: err.stack })
-  });
-});
+app.use(errorHandler);
 
 // Middleware para rutas no encontradas
-app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Ruta no encontrada',
-    path: req.originalUrl
-  });
-});
+app.use('*', notFoundHandler);
 
 // Iniciar servidor
 const PORT = config.port;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
-  console.log(`🌍 Entorno: ${config.nodeEnv}`);
-  console.log(`📡 API disponible en: http://localhost:${PORT}`);
+  logger.info('Servidor iniciado correctamente', {
+    port: PORT,
+    environment: config.nodeEnv,
+    url: `http://localhost:${PORT}`
+  });
+  
+  // Limpiar logs antiguos al iniciar
+  logger.cleanOldLogs(7);
 });
 
 export default app;

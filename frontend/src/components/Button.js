@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
-import { COLORS, STYLE_CONFIG } from '../constants/config';
+import { COLORS } from '../constants/colors';
+import { STYLE_CONFIG } from '../constants/config';
 
 const Button = ({
   title,

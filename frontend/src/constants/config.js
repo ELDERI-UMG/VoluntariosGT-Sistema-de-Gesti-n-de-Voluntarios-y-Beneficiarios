@@ -21,8 +21,8 @@ export const APP_CONFIG = {
   
   // URLs del backend
   API_BASE_URL: __DEV__ 
-    ? process.env.EXPO_PUBLIC_API_BASE_URL_DEV || 'http://localhost:5000/api'
-    : process.env.EXPO_PUBLIC_API_BASE_URL_PROD || 'https://tu-backend-produccion.com/api',
+    ? process.env.EXPO_PUBLIC_API_BASE_URL_DEV || 'http://localhost:5001/api'
+    : process.env.EXPO_PUBLIC_API_BASE_URL_PROD || 'https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/api',
   
   // Configuración de Supabase
   SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL || 'https://cicwxpdkikzeboeggmje.supabase.co',
@@ -158,28 +158,35 @@ export const STYLE_CONFIG = {
     full: 9999,
   },
   
-  // Sombras
+  // Sombras modernas con turquesa
   shadows: {
     sm: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 2,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06,
+      shadowRadius: 4,
+      elevation: 3,
     },
     md: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.15,
-      shadowRadius: 4,
-      elevation: 4,
+      shadowColor: '#1ABC9C',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 5,
     },
     lg: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.2,
-      shadowRadius: 8,
+      shadowColor: '#1ABC9C',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.15,
+      shadowRadius: 16,
       elevation: 8,
+    },
+    xl: {
+      shadowColor: '#1ABC9C',
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.2,
+      shadowRadius: 24,
+      elevation: 12,
     },
   },
   

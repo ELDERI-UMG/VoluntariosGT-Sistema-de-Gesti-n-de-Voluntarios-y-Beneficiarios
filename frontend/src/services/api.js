@@ -10,7 +10,9 @@ class ApiClient {
   // Obtener token de autenticación
   async getAuthToken() {
     try {
-      return await AsyncStorage.getItem(APP_CONFIG.CACHE.TOKEN_KEY);
+      const token = await AsyncStorage.getItem(APP_CONFIG.CACHE.TOKEN_KEY);
+      console.log('🔑 Token obtenido:', token ? 'Token presente' : 'No hay token');
+      return token;
     } catch (error) {
       console.error('Error al obtener token:', error);
       return null;
@@ -133,7 +135,9 @@ class ApiClient {
 
     try {
       const url = `${this.baseURL}${endpoint}`;
+      console.log(`🌐 API Request: ${method} ${url}`);
       const headers = await this.createHeaders(includeAuth);
+      console.log('📋 Headers:', { ...headers, Authorization: headers.Authorization ? 'Bearer [TOKEN]' : 'No auth' });
 
       const config = {
         method,

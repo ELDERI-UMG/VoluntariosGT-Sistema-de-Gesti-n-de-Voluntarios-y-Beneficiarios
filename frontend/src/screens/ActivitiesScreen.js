@@ -18,7 +18,8 @@ import { locationService } from '../services/location';
 import ActivityCard from '../components/ActivityCard';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { COLORS, STYLE_CONFIG } from '../constants/config';
+import { COLORS } from '../constants/colors';
+import { STYLE_CONFIG } from '../constants/config';
 
 const ActivitiesScreen = ({ navigation, route }) => {
   const { user, hasRole } = useAuth();

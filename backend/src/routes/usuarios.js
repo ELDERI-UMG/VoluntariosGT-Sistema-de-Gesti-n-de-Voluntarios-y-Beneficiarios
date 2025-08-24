@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  getEstadisticasUsuario,
   getMisInscripciones,
   cancelarInscripcion,
   subirEvidencia,
@@ -19,6 +20,13 @@ import {
 } from '../utils/middleware.js';
 
 const router = express.Router();
+
+/**
+ * @route GET /api/usuarios/estadisticas
+ * @desc Obtener estadísticas del usuario actual
+ * @access Private
+ */
+router.get('/estadisticas', authenticateUser, getEstadisticasUsuario);
 
 /**
  * @route GET /api/usuarios/mis-inscripciones
