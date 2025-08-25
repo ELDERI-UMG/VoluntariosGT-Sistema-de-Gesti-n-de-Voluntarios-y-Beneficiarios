@@ -1,0 +1,15 @@
+# Configuración del Dashboard Web - VoluntariosGT
+
+# URL base de la API del backend
+VITE_API_BASE_URL=https://voluntariosgt-sistema-de-gesti-n-de.onrender.com/api
+
+# Configuración de Supabase (si se usa directamente desde el frontend)
+VITE_SUPABASE_URL=https://cicwxpdkikzeboeggmje.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpY3d4cGRraWt6ZWJvZWdnbWplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NzU1ODksImV4cCI6MjA3MTE1MTU4OX0.wovhHu2oOato__PovFmVWkCa9ujFZOT8BJRx9VauYFo
+
+# Configuración de desarrollo
+VITE_DEV_MODE=true
+
+# Configuración de logging
+VITE_LOG_LEVEL=info
+
